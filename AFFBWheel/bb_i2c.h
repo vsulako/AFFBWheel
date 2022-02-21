@@ -18,6 +18,13 @@
 #define ADS1015_CONFIG_CH1     (ADS1015_CONFIG | ((2)<<12))
 #define ADS1015_CONFIG_CH2     (ADS1015_CONFIG | ((3)<<12))
 
+#define AS5600_ADDR   0x36
+#define AS5600_RRAWANGLE 0x0C
+#define AS5600_RANGLE 0x0E
+#define AS5600_RCONF  0x07
+#define AS5600_CONFIG  0b0001101100000000 //no low power mode, hysteresis off, output digital PWM, PWM 115hz, slow filter 2x(11), fast filter 9LSB(011), watchdog off.
+
+
 //bitbang I2C communication.
 //hardware i2c does not allow to reach max available speed, so bitbang is used
 class BB_I2C
@@ -54,4 +61,10 @@ class ADS1015_BBI2C: public BB_I2C
   public:
     void begin(uint8_t addr=ADS1015_DEFAULT_ADDR);
     void requestADC(uint8_t channel);
+};
+
+class AS5600_BBI2C: public BB_I2C
+{
+  public:
+    void begin(uint8_t addr=AS5600_ADDR);
 };

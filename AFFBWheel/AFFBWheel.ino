@@ -32,6 +32,8 @@ SOFTWARE.
 #include "motor.h"
 #include "settings.h"
 
+#define AFFB_VER "1.0.0"
+
 //global variables
 Wheel_ wheel;
 Motor motor;
@@ -55,7 +57,7 @@ uint8_t debounceCount=0;
 //constants and definitions for analog axes
 #if ((PEDALS_TYPE == PT_INTERNAL) || (PEDALS_TYPE == PT_HC164))
   #define DEFAULT_AA_MIN 0
-  #define DEFAULT_AA_MAX 1024
+  #define DEFAULT_AA_MAX 1023
 #endif
 
 #if PEDALS_TYPE == PT_ADS1015
@@ -130,6 +132,23 @@ void load(bool defaults=false);
   #define GET_WHEEL_POS (((int32_t)encoder.read() << STEER_BITDEPTH) / ENCODER_PPR)
   #define CENTER_WHEEL encoder.write(0);
 
+#endif
+
+#if STEER_TYPE == ST_AS5600
+  #include "bb_i2c.h"
+  #include "multiturn.h"
+  
+  AS5600_BBI2C AS5600;
+  MultiTurn MT;
+
+  #define SETUP_WHEEL_SENSOR setupAS5600();
+  #define GET_WHEEL_POS (MT.setValue((AS5600.read16()-2048)<<(STEER_BITDEPTH-12)))
+  #define CENTER_WHEEL MT.zero();
+
+  void setupAS5600()
+  {
+     AS5600.begin();
+  }
 #endif
 //-------------------------------------------------------------------------------------
 
@@ -222,6 +241,7 @@ void mainLoop() {
         wheel.axisWheel->setValue(GET_WHEEL_POS);
         readAnalogAxes();
         readButtons();
+        processUsbCmd();
         wheel.update();
         processFFB();
       }
@@ -308,6 +328,147 @@ int16_t applyForceLimit(int16_t force)
       return force;
     else
       return constrain(force, -settings.cutForce, settings.cutForce);
+}
+
+
+/*
+communicating with GUI:
+*/
+void processUsbCmd()
+{
+  USB_GUI_Command* usbCmd=&wheel.ffbEngine.ffbReportHandler->usbCommand;
+
+  //clear output report
+  memset(&wheel.USB_GUI_Report, 0, sizeof(wheel.USB_GUI_Report));
+  
+  void* data=wheel.USB_GUI_Report.data;
+  if (usbCmd->command)
+  {
+      //return data only for read commands
+      if (usbCmd->command<10)
+      {
+        wheel.USB_GUI_Report.command=usbCmd->command;
+        wheel.USB_GUI_Report.arg=usbCmd->arg[0];
+      }
+      
+      switch(usbCmd->command)
+      {
+          //get data
+          case 1: //return string "AFFBW "+version
+              strcpy_P(((GUI_Report_Version*)data)->id, PSTR("AFFBW"));
+              strcpy_P(((GUI_Report_Version*)data)->ver, PSTR(AFFB_VER));
+            break;
+          case 2: //return steering axis data
+              ((GUI_Report_SteerAxis*)data)->rawValue=wheel.axisWheel->rawValue;
+              ((GUI_Report_SteerAxis*)data)->value=wheel.axisWheel->value;
+              ((GUI_Report_SteerAxis*)data)->range=wheel.axisWheel->range;
+              ((GUI_Report_SteerAxis*)data)->velocity=wheel.axisWheel->velocity;
+              ((GUI_Report_SteerAxis*)data)->acceleration=wheel.axisWheel->acceleration;
+            break;
+          case 3: //return analog axis data
+              ((GUI_Report_AnalogAxis*)data)->rawValue=wheel.analogAxes[usbCmd->arg[0]]->rawValue;
+              ((GUI_Report_AnalogAxis*)data)->value=wheel.analogAxes[usbCmd->arg[0]]->value;
+              ((GUI_Report_AnalogAxis*)data)->axisMin=wheel.analogAxes[usbCmd->arg[0]]->axisMin;
+              ((GUI_Report_AnalogAxis*)data)->axisMax=wheel.analogAxes[usbCmd->arg[0]]->axisMax;
+              ((GUI_Report_AnalogAxis*)data)->center=wheel.analogAxes[usbCmd->arg[0]]->getCenter();
+              ((GUI_Report_AnalogAxis*)data)->deadzone=wheel.analogAxes[usbCmd->arg[0]]->getDZ();
+              ((GUI_Report_AnalogAxis*)data)->autoLimit=wheel.analogAxes[usbCmd->arg[0]]->autoLimit;
+              ((GUI_Report_AnalogAxis*)data)->hasCenter=!wheel.analogAxes[usbCmd->arg[0]]->autoCenter;
+            break;
+          case 4: //return buttons data
+              ((GUI_Report_Buttons*)data)->buttons=wheel.buttons;
+              ((GUI_Report_Buttons*)data)->centerButton=settings.centerButton;
+              ((GUI_Report_Buttons*)data)->debounce=settings.debounce;
+            break;
+          case 5: //return gains
+              memcpy(data, settings.gain, sizeof(settings.gain));
+            break;
+          case 6: //return remaining settings
+              //GUI_Report_Settings* repSettings=(GUI_Report_Settings*)(wheel.USB_GUI_Report.data);
+              
+              ((GUI_Report_Settings*)data)->maxvd=round(16384.0/wheel.ffbEngine.maxVelocityDamperC);
+              ((GUI_Report_Settings*)data)->maxvf=round(16384.0/wheel.ffbEngine.maxVelocityFrictionC);
+              ((GUI_Report_Settings*)data)->maxacc=round(16384.0/wheel.ffbEngine.maxAccelerationInertiaC);
+
+              ((GUI_Report_Settings*)data)->minForce=settings.minForce;
+              ((GUI_Report_Settings*)data)->maxForce=settings.maxForce;
+              ((GUI_Report_Settings*)data)->cutForce=settings.cutForce;
+
+              ((GUI_Report_Settings*)data)->ffbBD=motor.bitDepth;
+            break;
+            
+
+          // set 
+          case 10://set range for steering axis
+              wheel.axisWheel->setRange(usbCmd->arg[0]);
+            break;
+          case 11://set limits for analog axis
+              wheel.analogAxes[usbCmd->arg[0]]->setLimits(usbCmd->arg[1], usbCmd->arg[2]); 
+            break;
+          case 12://set center for analog axis
+              wheel.analogAxes[usbCmd->arg[0]]->setCenter(usbCmd->arg[1]);
+            break;
+          case 13://set deadzone for analog axis
+              wheel.analogAxes[usbCmd->arg[0]]->setDZ(usbCmd->arg[1]);
+            break; 
+          case 14://set autolimits for analog axis
+              wheel.analogAxes[usbCmd->arg[0]]->setAutoLimits(usbCmd->arg[1]>0);
+            break; 
+            
+          case 15://set center button
+              settings.centerButton=usbCmd->arg[0];
+            break; 
+          case 16://set debounce value
+              settings.debounce=usbCmd->arg[0];
+            break; 
+
+          case 17://set gain
+              settings.gain[usbCmd->arg[0]]=usbCmd->arg[1];
+            break;
+            
+          case 18://set misc settings
+              switch (usbCmd->arg[0])
+              {
+                  case 0:
+                     wheel.ffbEngine.maxVelocityDamperC=16384.0/usbCmd->arg[1];
+                     break;
+                  case 1:
+                     wheel.ffbEngine.maxVelocityFrictionC=16384.0/usbCmd->arg[1];
+                     break;
+                  case 2:
+                     wheel.ffbEngine.maxAccelerationInertiaC=16384.0/usbCmd->arg[1];
+                     break;
+                  case 3:
+                     settings.minForce=usbCmd->arg[1];
+                     break;
+                  case 4:
+                     settings.maxForce=usbCmd->arg[1];
+                     break;
+                  case 5:
+                     settings.cutForce=usbCmd->arg[1];
+                     break;
+                  case 6:
+                     motor.setBitDepth(usbCmd->arg[1]);
+                     break;
+              }
+            break;
+
+          //commands
+          case 20: //load settings from EEPROM
+              load();
+            break;
+          case 21: //save settings to EEPROM
+              save();
+            break;
+          case 22: //load defaults
+              load(true);
+            break;
+          case 23://center wheel
+              center();
+            break;
+      }
+    }
+    usbCmd->command=0;
 }
 
 

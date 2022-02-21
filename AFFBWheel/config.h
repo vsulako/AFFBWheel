@@ -2,6 +2,7 @@
 //---------------------------Constants, do not change--------------------
 #define ST_ENCODER  0
 #define ST_TLE5010  1
+#define ST_AS5600   2
 
 #define PT_INTERNAL     0
 #define PT_HC164        1
@@ -21,6 +22,7 @@
 //different types of wheel sensor. Choose only one!
 #define STEER_TYPE ST_ENCODER
 //#define STEER_TYPE ST_TLE5010
+//#define STEER_TYPE ST_AS5600
 
 //settings for encoder
 #define ENCODER_PIN1  0       //encoder pins must be interrupt pins:[0, 1, 2, 3]

@@ -28,8 +28,13 @@
 #include <Arduino.h>
 #include "HIDReportType.h"
 
+typedef struct
+{
+  uint8_t  reportId;
+  uint8_t  command;
+  int16_t  arg[3];
+} USB_GUI_Command;
 
-extern bool out;
 
 class FfbReportHandler {
   public:
@@ -68,12 +73,16 @@ class FfbReportHandler {
     void SetConstantForce(USB_FFBReport_SetConstantForce_Output_Data_t* data, volatile TEffectState* effect);
     void SetRampForce(USB_FFBReport_SetRampForce_Output_Data_t* data, volatile TEffectState* effect);
 
+   
     // Handle incoming data from USB
     void FfbOnCreateNewEffect(USB_FFBReport_CreateNewEffect_Feature_Data_t* inData);
     void FfbOnUsbData(uint8_t* data, uint16_t len);
     uint8_t* FfbOnPIDPool();
     uint8_t* FfbOnPIDBlockLoad();
     uint8_t* FfbOnPIDStatus();
+
+    USB_GUI_Command usbCommand;
+    
 };
 
 extern FfbReportHandler ffbReportHandler;
