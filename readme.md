@@ -365,33 +365,3 @@ Changes in config.h:
 	#define I2C_PIN_SCL 7
 	```
 In case of using another I2C devices (AS5600,AD1015) - connect in parallel to same pins.
-
-## Increasing polling speed (optional).
-
-This will require to modify Arduino core file.
-
-In file `[arduino dir]\hardware\arduino\avr\cores\arduino\USBCore.cpp` find function `USB_Send`.
-
-Find block: 
-```cpp
-u8 n = USB_SendSpace(ep);
-if (n == 0)
-{
-	if (!(--timeout))
-		return -1;
-	delay(1);
-	continue;
-}
-```
-and replace it with 
-```cpp
-u8 n = USB_SendSpace(ep);
-if (n == 0)
-{
-	return -1;
-}
-```
-This allows to reach higher polling speed. (>1000 loops per sec)  
-Don&apos;t know if it would break something or cause glitches, for me it seems to work well by far.
-
-Checking rate: use `timing` command, it will print out loop/sec count.
