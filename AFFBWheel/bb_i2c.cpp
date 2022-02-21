@@ -7,7 +7,7 @@
 
 #define I2C_IS_SDA_HIGH (digitalReadFast(I2C_PIN_SDA))
 
-#define I2C_START {I2C_SDA_LOW;I2C_SCL_LOW;}
+#define I2C_START {I2C_SDA_LOW;__builtin_avr_delay_cycles(2);I2C_SCL_LOW;}
 #define I2C_STOP  {I2C_SCL_HIGH;I2C_SDA_HIGH;}
 
 void BB_I2C::setAddr(uint8_t addr)
@@ -171,4 +171,13 @@ void ADS1015_BBI2C::requestADC(uint8_t channel)
       break;
   }
   requestReadRegister(ADS1015_RCONV);
+}
+
+void AS5600_BBI2C::begin(uint8_t addr)
+{
+    setAddr(addr);
+    
+    writeRegister16(AS5600_RCONF, AS5600_CONFIG);
+
+    requestReadRegister(AS5600_RRAWANGLE);
 }

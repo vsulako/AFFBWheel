@@ -53,7 +53,7 @@ Set encoder PPR in config.h, in line `#define ENCODER_PPR 400`.
 
 Configuration options are in config.h, mostly for different hardware configurations (see [below](#althw)).
 
-## Commands.
+## Settings and commands.
 
 Changeable settings can be changed on the fly using commands on serial port.  
 For most commands, if no value is given, command prints current setting.
@@ -200,26 +200,49 @@ This is significally faster than output to serial port and allows to see graphs 
 <a name="althw"></a>
 ## Alternate hardware configurations.
 
-### TLE5010 instead of encoder:
-
-Wiring diagram:
-![](images/base_TLE5010.png)
-
-TLE5010 is a digital sensor that allows to get angle of magnetic field rotation. It can be used instead of encoder.
-
-#### Placement of magnet and TLE5010:
-![](images/TLE5010_magnet.png)
-
-Changes in config.h:
-- uncomment `#define STEER_TYPE ST_TLE5010`
-- comment `#define STEER_TYPE ST_ENCODER` 
-	
 ### Leonardo instead of ProMicro:
 
 ![](images/leonardo_pins.png)
 
 On Leonardo board pins 14,15,16(MISO, SCK, MOSI - for SPI) are placed on ICSP connector.  
 All connections are same as for ProMicro.
+
+### Alternate options for steering axis:
+
+#### TLE5010:
+
+TLE5010 is a digital sensor that allows to get angle of magnetic field rotation. It can be used instead of encoder.
+
+Wiring diagram:
+![](images/TLE5010.png)
+[full schematics](images/base_TLE5010.png)
+
+Placement of magnet and TLE5010:
+![](images/TLE5010_magnet.png)
+
+Magnet is placed at top center of steering axis, TLE5010 is placed against it, airgap is 1-3 mm.
+Magnet pole separating line must be faced to TLE5010.
+
+Changes in config.h:
+- uncomment `#define STEER_TYPE ST_TLE5010`
+- comment `#define STEER_TYPE ST_ENCODER` 
+
+#### AS5600
+
+AS5600 - 12-bit digital magnet rotation sensor with I2C interface. It is used similar to TLE5010.
+
+Wiring diagram:
+![](images/AS5600.png)
+
+Changes in config.h:
+- uncomment `#define STEER_TYPE ST_AS5600`
+- comment other lines with `STEER_TYPE`
+- set I2C pins (any free pins can be used):
+	```cpp
+	#define I2C_PIN_SDA 0
+	#define I2C_PIN_SCL 1
+	```
+In case of using another I2C devices (AD1015,MCP23017) - connect in parallel to same pins.
 
 ### Alternate options for analog axes (pedals):
 
@@ -312,6 +335,7 @@ Changes in config.h:
 	#define I2C_PIN_SDA A0
 	#define I2C_PIN_SCL A1
 	```
+In case of using another I2C devices (AS5600,MCP23017) - connect in parallel to same pins.
 
 ### Alternate options for buttons.
 
@@ -337,8 +361,7 @@ Changes in config.h:
 	#define I2C_PIN_SDA 2
 	#define I2C_PIN_SCL 7
 	```
-
-In case of using MCP23017 and ADS1015 together - connect in parallel to same SDA/SCL pins.
+In case of using another I2C devices (AS5600,AD1015) - connect in parallel to same pins.
 
 ## Increasing polling speed (optional).
 

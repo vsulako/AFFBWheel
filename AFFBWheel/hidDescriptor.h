@@ -674,5 +674,29 @@ static const uint8_t wheelHIDDescriptor[] PROGMEM = {
     0xB1, 0x03, // FEATURE ( Cnst,Var,Abs)
     0xC0, // END COLLECTION ()
 
+
+    0x85, 0x0F,                    //   REPORT_ID (15)
+    0x09, 0x03,                    //   USAGE (Vendor Usage 3)
+    0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
+    0x26, 0xff, 0x00,              //   LOGICAL_MAXIMUM (255)
+    0x75, 0x08,                    //   REPORT_SIZE (8)
+    0x95, 0x01,                    //   REPORT_COUNT (1)
+    0x91, 0x02,                    //     Output (Data,Var,Abs)
+    //0xb1, 0x82,                  //   FEATURE (Data,Var,Abs,Vol)  //command
+    0x09, 0x03,                    //   USAGE (Vendor Usage 3)
+    0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
+    0x26, 0xff, 0x00,              //   LOGICAL_MAXIMUM (255)
+    0x75, 0x10,                    //   REPORT_SIZE (16)
+    0x95, 0x03,                    //   REPORT_COUNT (3)
+    0x91, 0x02,                    //     Output (Data,Var,Abs)
+    //0xb1, 0x82,                  //   FEATURE (Data,Var,Abs,Vol)  //3 args
+    
+    0x85, 0x10,                    //   REPORT_ID (16)
+    0x09, 0x04,                    //   USAGE (Vendor Usage 4)
+    0x75, 0x08,                    //   REPORT_SIZE (8)
+    0x95, 0x1f,                    //   REPORT_COUNT (31)
+    //0x81, 0x82,                  //   INPUT (Data,Var,Abs,Vol)
+    0x81, 0x02,                    // INPUT (Data,Var,Abs) 
+    
   0xC0, // END COLLECTION ()
 };

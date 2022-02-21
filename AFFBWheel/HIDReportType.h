@@ -216,6 +216,7 @@ typedef struct
 #define MEFFECTSTATE_ALLOCATED	0x01
 #define MEFFECTSTATE_PLAYING		0x02
 
+
 typedef struct {
   uint8_t state;  // see constants <MEffectState_*>
   uint8_t effectType;
@@ -243,6 +244,7 @@ typedef struct {
 
   uint16_t halfPeriod;              
   uint16_t periodTime;
+ 
   float fadeTimeC, attackTimeC, periodC;
 
 } TEffectState;

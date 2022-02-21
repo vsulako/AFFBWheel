@@ -35,4 +35,10 @@ int16_t Wheel_::update(void)
 
   HID().RecvFfbReport();
   HID().SendReport(0x01, &data, sizeof(data));
+
+  if (USB_GUI_Report.command)
+  {
+    HID().SendReport(16, &USB_GUI_Report, sizeof(USB_GUI_Report));
+    USB_GUI_Report.command=0;
+  }
 }

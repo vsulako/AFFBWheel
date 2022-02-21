@@ -338,6 +338,7 @@ uint8_t* FfbReportHandler::FfbOnPIDStatus()
   return (uint8_t*)&pidState;
 }
 
+
 void FfbReportHandler::FfbOnUsbData(uint8_t* data, uint16_t len)
 {
   uint8_t i;
@@ -385,6 +386,10 @@ void FfbReportHandler::FfbOnUsbData(uint8_t* data, uint16_t len)
       break;
     case 14:
       //FfbHandle_SetCustomForce((USB_FFBReport_SetCustomForce_Output_Data_t*)data);
+      break;
+    case 15:
+      //commands from GUI
+      usbCommand=*((USB_GUI_Command*)data);
       break;
     default:
       break;
