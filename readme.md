@@ -15,7 +15,7 @@ However, modern games typically use only constant force to emulate other effects
 ## Hardware:
 
 - Arduino Atmega32U4 board (Leonardo, ProMicro, Micro, etc)
-- incremental encoder or TLE5010 sensor for steering axis.
+- incremental encoder or TLE5010/AS5600 sensor for steering axis.
 - potentiometers for analog axes
 - 4x shift registers 74HC165 (alternately - I2C expanders MCP23017)
 - BTS7960 driver
