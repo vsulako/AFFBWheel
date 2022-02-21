@@ -214,10 +214,13 @@ All connections are same as for ProMicro.
 TLE5010 is a digital sensor that allows to get angle of magnetic field rotation. It can be used instead of encoder.
 
 Wiring diagram:
+
 ![](images/TLE5010.png)
+
 [full schematics](images/base_TLE5010.png)
 
 Placement of magnet and TLE5010:
+
 ![](images/TLE5010_magnet.png)
 
 Magnet is placed at top center of steering axis, TLE5010 is placed against it, airgap is 1-3 mm.
