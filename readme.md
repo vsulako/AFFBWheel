@@ -55,7 +55,7 @@ Configuration options are in config.h, mostly for different hardware configurati
 
 ## Settings and commands.
 
-Changeable settings can be changed on the fly using commands on serial port.  
+Changeable settings can be changed on the fly using [GUI](https://github.com/vsulako/AFFBWHeelGUI) or commands on serial port.  
 For most commands, if no value is given, command prints current setting.
 
 - `center`  
