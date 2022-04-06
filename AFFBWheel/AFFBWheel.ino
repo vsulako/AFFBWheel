@@ -142,7 +142,7 @@ void load(bool defaults=false);
   MultiTurn MT;
 
   #define SETUP_WHEEL_SENSOR setupAS5600();
-  #define GET_WHEEL_POS (MT.setValue((AS5600.read16()-2048)<<(STEER_BITDEPTH-12)))
+  #define GET_WHEEL_POS (MT.setValue((AS5600.readAngle()-2048)<<(STEER_BITDEPTH-12)))
   #define CENTER_WHEEL MT.zero();
 
   void setupAS5600()

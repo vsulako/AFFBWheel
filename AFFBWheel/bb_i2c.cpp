@@ -181,3 +181,9 @@ void AS5600_BBI2C::begin(uint8_t addr)
 
     requestReadRegister(AS5600_RRAWANGLE);
 }
+int16_t AS5600_BBI2C::readAngle()
+{
+    int16_t val=read16();
+    requestReadRegister(AS5600_RRAWANGLE);
+    return val;
+}

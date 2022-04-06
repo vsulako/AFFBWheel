@@ -67,4 +67,5 @@ class AS5600_BBI2C: public BB_I2C
 {
   public:
     void begin(uint8_t addr=AS5600_ADDR);
+    int16_t readAngle();
 };
