@@ -32,7 +32,7 @@ SOFTWARE.
 #include "motor.h"
 #include "settings.h"
 
-#define AFFB_VER "1.0.0"
+#define AFFB_VER "1.0.1"
 
 //global variables
 Wheel_ wheel;
@@ -528,16 +528,20 @@ void readAnalogAxes()
   #ifdef AA_PULLUP_LINEARIZE
       wheel.analogAxes[AXIS_AUX1]->setValue(pullup_linearize(analogReadFast(PIN_AUX1)));
       wheel.analogAxes[AXIS_AUX2]->setValue(pullup_linearize(analogReadFast(PIN_AUX2)));
+      wheel.analogAxes[AXIS_AUX3]->setValue(pullup_linearize(analogReadFast(PIN_AUX3)));
+      wheel.analogAxes[AXIS_AUX4]->setValue(pullup_linearize(analogReadFast(PIN_AUX4)));
   #else
       wheel.analogAxes[AXIS_AUX1]->setValue(analogReadFast(PIN_AUX1));
       wheel.analogAxes[AXIS_AUX2]->setValue(analogReadFast(PIN_AUX2));
+      wheel.analogAxes[AXIS_AUX3]->setValue(analogReadFast(PIN_AUX3));
+      wheel.analogAxes[AXIS_AUX4]->setValue(analogReadFast(PIN_AUX4));
   #endif
 
   if (fvaOut)
   {
-    wheel.analogAxes[AXIS_AUX1]->value=(wheel.axisWheel->velocity << 1) * wheel.ffbEngine.maxVelocityDamperC;
-    wheel.analogAxes[AXIS_AUX2]->value=(wheel.axisWheel->acceleration << 1)* wheel.ffbEngine.maxAccelerationInertiaC;
-    wheel.analogAxes[AXIS_CLUTCH]->value=force<<1;
+    wheel.analogAxes[AXIS_AUX3]->value=(wheel.axisWheel->velocity << 1) * wheel.ffbEngine.maxVelocityDamperC;
+    wheel.analogAxes[AXIS_AUX4]->value=(wheel.axisWheel->acceleration << 1)* wheel.ffbEngine.maxAccelerationInertiaC;
+    wheel.analogAxes[AXIS_AUX2]->value=force<<1;
   }
 }
 
@@ -786,7 +790,7 @@ void processSerial()
 
   }
   else
-  if ((axisInfo>0)&&(axisInfo<=5))
+  if ((axisInfo>0)&&(axisInfo<=7))
   {
       Serial.print(F("Axis#"));
       Serial.print(axisInfo);
@@ -831,7 +835,7 @@ void processSerial()
         arg2=Serial.parseInt(SKIP_WHITESPACE);
       if (Serial.available())
         arg3=Serial.parseInt(SKIP_WHITESPACE);
-        
+
      if (strcmp_P(cmd, PSTR("fvaout"))==0)
      {
         fvaOut=!fvaOut;
@@ -948,7 +952,7 @@ void processSerial()
      //axisinfo <axis>
      if (strcmp_P(cmd, PSTR("axisinfo"))==0)
      {
-       if ((arg1>=0)&&(arg1<=5))
+       if ((arg1>=0)&&(arg1<=7))
            axisInfo=arg1;
        else
            axisInfo=-1;
@@ -956,9 +960,11 @@ void processSerial()
      
      //limits <axis> <min> <max>
      if (strcmp_P(cmd, PSTR("limit"))==0)
-     if ((arg1>=1) && (arg1<=5))
+     if ((arg1>=1) && (arg1<=7))
      {
-        wheel.analogAxes[arg1-1]->setLimits(arg2, arg3);
+        if ((arg2>-32768)&&(arg3>-32768))
+          wheel.analogAxes[arg1-1]->setLimits(arg2, arg3);
+          
         Serial.print(F("Limits axis#"));
         Serial.print(arg1);
         Serial.print(F(": "));
@@ -969,9 +975,10 @@ void processSerial()
      
      //axiscenter <axis> <pos>
      if (strcmp_P(cmd, PSTR("axiscenter"))==0)
-     if ((arg1>=1) && (arg1<=5))
+     if ((arg1>=1) && (arg1<=7))
      {
-        wheel.analogAxes[arg1-1]->setCenter(arg2);
+        if (arg2>-32768)
+          wheel.analogAxes[arg1-1]->setCenter(arg2);
         Serial.print(F("Axis#"));
         Serial.print(arg1);
         Serial.print(F(" center:"));
@@ -980,9 +987,10 @@ void processSerial()
 
      //axisdz <axis> <pos>
      if (strcmp_P(cmd, PSTR("axisdz"))==0)
-     if ((arg1>=1) && (arg1<=5))
+     if ((arg1>=1) && (arg1<=7))
      {
-        wheel.analogAxes[arg1-1]->setDZ(arg2);
+        if (arg2>-32768)
+          wheel.analogAxes[arg1-1]->setDZ(arg2);
         Serial.print(F("Axis#"));
         Serial.print(arg1);
         Serial.print(F(" Deadzone:"));
@@ -991,7 +999,7 @@ void processSerial()
      
      //autolimits <axis>
      if (strcmp_P(cmd, PSTR("autolimit"))==0)
-     if ((arg1>=1) && (arg1<=5))
+     if ((arg1>=1) && (arg1<=7))
      {
           wheel.analogAxes[arg1-1]->setAutoLimits(!wheel.analogAxes[arg1-1]->autoLimit);
           Serial.print(F("Axis #"));
@@ -1026,7 +1034,6 @@ void processSerial()
   }
 }
 
-
 //load and save settings
 void load(bool defaults=false)
 {
@@ -1050,7 +1057,7 @@ void load(bool defaults=false)
 
     settingsE.data.centerButton = -1; //no center button
     
-    for(i=0;i<5;i++)
+    for(i=0;i<7;i++)
     {
       if (i<3)
       {
@@ -1080,7 +1087,7 @@ void load(bool defaults=false)
 
   settings=settingsE.data;
 
-  for(i=0;i<5;i++)
+  for(i=0;i<7;i++)
   {
     wheel.analogAxes[i]->setLimits(settingsE.axes[i].axisMin, settingsE.axes[i].axisMax);
     wheel.analogAxes[i]->setCenter(settingsE.axes[i].axisCenter);
@@ -1107,7 +1114,7 @@ void save()
 
     settingsE.range=wheel.axisWheel->range;
 
-    for(i=0;i<5;i++)
+    for(i=0;i<7;i++)
     {
       settingsE.axes[i].axisMin = wheel.analogAxes[i]->axisMin;
       settingsE.axes[i].axisMax = wheel.analogAxes[i]->axisMax;

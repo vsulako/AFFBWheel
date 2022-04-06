@@ -29,7 +29,7 @@ void SettingsEEPROM::print()
     Serial.println();
   }
   
-  for(i=0;i<5;i++)
+  for(i=0;i<7;i++)
   {
     Serial.print(F("Axis "));
     Serial.print(i+1);

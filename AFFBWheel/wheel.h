@@ -10,11 +10,13 @@
 #define AXIS_CLUTCH 2
 #define AXIS_AUX1 3
 #define AXIS_AUX2 4
+#define AXIS_AUX3 5
+#define AXIS_AUX4 6
 
 //Input Report 
 typedef struct
 {
-  int16_t axes[6];
+  int16_t axes[8];
   uint32_t buttons;
 } wheelData;
 
@@ -76,7 +78,7 @@ class Wheel_
 {
   public:
     AxisWheel* axisWheel;
-    Axis* analogAxes[5];
+    Axis* analogAxes[7];
     uint32_t buttons;
     Wheel_();
     int16_t update();

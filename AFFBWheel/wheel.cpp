@@ -14,6 +14,8 @@ Wheel_::Wheel_(void)
   analogAxes[AXIS_CLUTCH]=new Axis(MA_LEVEL_AXIS_CLUTCH);
   analogAxes[AXIS_AUX1]=new Axis(MA_LEVEL_AXIS_AUX1);
   analogAxes[AXIS_AUX2]=new Axis(MA_LEVEL_AXIS_AUX2);
+  analogAxes[AXIS_AUX3]=new Axis(MA_LEVEL_AXIS_AUX3);
+  analogAxes[AXIS_AUX4]=new Axis(MA_LEVEL_AXIS_AUX4);
 }
 
 
@@ -30,7 +32,8 @@ int16_t Wheel_::update(void)
 
   data.axes[4]=analogAxes[AXIS_AUX1]->value;
   data.axes[5]=analogAxes[AXIS_AUX2]->value;
-
+  data.axes[6]=analogAxes[AXIS_AUX3]->value;
+  data.axes[7]=analogAxes[AXIS_AUX4]->value;
   data.buttons=buttons;
 
   HID().RecvFfbReport();

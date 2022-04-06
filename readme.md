@@ -4,7 +4,7 @@
 
 This is project of Arduino based wheel controller with force feedback.
 
-- 6 axes: steering(X), accelerator(Y), brake(Z), clutch(Rx), and 2 additional(Ry, Rz - e.g. for thumbstick).
+- 8 axes: steering(X), accelerator(Y), brake(Z), clutch(Rx), and 4 additional(Ry, Rz, Slider, Dial - e.g. for thumbstick, handbrake, etc).
 - 32 buttons.
 - FFB effects: constant/ramp/square/sine/triangle/sawtooth/spring/damper/inertia/friction
 - Wheel range can be changed on the fly: 1080/900/360/270/180 degree or any other value.
@@ -80,6 +80,8 @@ Axes are:
  **3** - **clutch**  
  **4** - **aux1**  
  **5** - **aux2**  
+ **6** - **aux3**  
+ **7** - **aux4**  
  **no value** - **disable output**  
 This output slows down, do not forget to disable it when you do not need it.  
 
@@ -194,7 +196,7 @@ F - time of FFB calculation
 loop/sec - loops per second  
 
 - `fvaout`  
-turn on/off debug output of FFB value, steering axis velocity and acceleration into axes Rx, Ry, Rz (clutch/aux1/aux2).  
+turn on/off debug output of FFB value, steering axis velocity and acceleration into axes Rz, Slider, Dial (aux2/aux3/aux4).  
 This is significally faster than output to serial port and allows to see graphs in apps like VKB Joystick Tester.
 
 <a name="althw"></a>

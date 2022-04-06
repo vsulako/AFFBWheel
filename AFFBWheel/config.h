@@ -46,6 +46,9 @@
 //aux analog axes pins
 #define PIN_AUX1    A3
 #define PIN_AUX2    A8
+#define PIN_AUX3    A6
+#define PIN_AUX4    A7
+
 
 //different ways of connecting pedals. Choose only one!
 #define PEDALS_TYPE PT_INTERNAL           //use internal ADC
@@ -113,6 +116,8 @@
 #define MA_LEVEL_AXIS_CLUTCH  4
 #define MA_LEVEL_AXIS_AUX1    0
 #define MA_LEVEL_AXIS_AUX2    0
+#define MA_LEVEL_AXIS_AUX3    0
+#define MA_LEVEL_AXIS_AUX4    0
 
 //----------------------------Buttons-------------------------------------
 //different ways of connecting buttons. Choose only one!

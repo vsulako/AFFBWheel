@@ -25,7 +25,7 @@ struct SettingsData
 //all settings
 class SettingsEEPROM{
   public:
-    SettingsAxis axes[5];
+    SettingsAxis axes[7];
     SettingsData data;
 
     uint16_t range;
