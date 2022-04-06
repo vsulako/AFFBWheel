@@ -42,6 +42,10 @@ For lowering noise it is recommended to add decoupling capacitors (ceramic 100nf
 
 Set encoder PPR in config.h, in line `#define ENCODER_PPR 400`.
 
+#### Blocking unneeded analog axes.
+
+If analog axis pin is not connected to potentiometer, axis will produce noise. To avoid that, either pull axis pin to GND with 1-10kOhm resistor, or set mimimum/maximum limits for axis to same value. So, axis will always report same value and will not mess up when detecting axes in games.
+
 #### [Alternate hardware configurations](#althw).
 
 ### Testing software:
