@@ -44,7 +44,7 @@ class Axis
 {
   public:
     int16_t rawValue;
-    int16_t value;
+    int16_t value=0;
     bool autoLimit=false;
     bool autoCenter=true;
     int16_t axisMin;

@@ -44,6 +44,7 @@
 
 //---------------------------analog axes---------------------------
 //aux analog axes pins
+//If aux axis is not needed, comment out corresponding line.
 #define PIN_AUX1    A3
 #define PIN_AUX2    A8
 #define PIN_AUX3    A6

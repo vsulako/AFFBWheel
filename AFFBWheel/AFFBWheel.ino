@@ -526,15 +526,32 @@ void readAnalogAxes()
 
   //additional axes
   #ifdef AA_PULLUP_LINEARIZE
-      wheel.analogAxes[AXIS_AUX1]->setValue(pullup_linearize(analogReadFast(PIN_AUX1)));
-      wheel.analogAxes[AXIS_AUX2]->setValue(pullup_linearize(analogReadFast(PIN_AUX2)));
-      wheel.analogAxes[AXIS_AUX3]->setValue(pullup_linearize(analogReadFast(PIN_AUX3)));
-      wheel.analogAxes[AXIS_AUX4]->setValue(pullup_linearize(analogReadFast(PIN_AUX4)));
+    
+      #ifdef PIN_AUX1
+        wheel.analogAxes[AXIS_AUX1]->setValue(pullup_linearize(analogReadFast(PIN_AUX1)));
+      #endif
+      #ifdef PIN_AUX2
+        wheel.analogAxes[AXIS_AUX2]->setValue(pullup_linearize(analogReadFast(PIN_AUX2)));
+      #endif
+      #ifdef PIN_AUX3
+        wheel.analogAxes[AXIS_AUX3]->setValue(pullup_linearize(analogReadFast(PIN_AUX3)));
+      #endif
+      #ifdef PIN_AUX4
+        wheel.analogAxes[AXIS_AUX4]->setValue(pullup_linearize(analogReadFast(PIN_AUX4)));
+      #endif
   #else
-      wheel.analogAxes[AXIS_AUX1]->setValue(analogReadFast(PIN_AUX1));
-      wheel.analogAxes[AXIS_AUX2]->setValue(analogReadFast(PIN_AUX2));
-      wheel.analogAxes[AXIS_AUX3]->setValue(analogReadFast(PIN_AUX3));
-      wheel.analogAxes[AXIS_AUX4]->setValue(analogReadFast(PIN_AUX4));
+      #ifdef PIN_AUX1
+        wheel.analogAxes[AXIS_AUX1]->setValue(analogReadFast(PIN_AUX1));
+      #endif
+      #ifdef PIN_AUX2
+        wheel.analogAxes[AXIS_AUX2]->setValue(analogReadFast(PIN_AUX2));
+      #endif
+      #ifdef PIN_AUX3
+        wheel.analogAxes[AXIS_AUX3]->setValue(analogReadFast(PIN_AUX3));
+      #endif
+      #ifdef PIN_AUX4
+        wheel.analogAxes[AXIS_AUX4]->setValue(analogReadFast(PIN_AUX4));
+      #endif
   #endif
 
   if (fvaOut)
