@@ -44,9 +44,8 @@ Set encoder PPR in config.h, in line `#define ENCODER_PPR 400`.
 
 #### Blocking unneeded analog axes.
 
-If analog axis pin is not connected to potentiometer, axis will produce noise. To avoid that, either pull axis pin to GND with 1-10kOhm resistor, or set mimimum/maximum limits for axis to same value. So, axis will always report same value and will not mess up when detecting axes in games.
-Also, 4 additional axes (AUX1-AUX4) can be disabled in config.h.
-Just comment out line `#define PIN_AUXN ..` for axis N.
+If analog axis pin is not connected to potentiometer, axis will produce noise. To avoid that, either pull axis pin to GND with 1-10kOhm resistor, or set mimimum/maximum limits for axis to same value. So, axis will always report same value and will not mess up when detecting axes in games.  
+Also, 4 additional axes (AUX1-AUX4) can be disabled in config.h. Just comment out line `#define PIN_AUXN ..`.  
 Disabled axis will be excluded from polling (saving ~45us of computing time) and will always report 50%.
 
 #### [Alternate hardware configurations](#althw).
