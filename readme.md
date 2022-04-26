@@ -245,6 +245,8 @@ AS5600 - 12-bit digital magnet rotation sensor with I2C interface. It is used si
 Wiring diagram:
 ![](images/AS5600.png)
 
+Remove resistor R1 (0ohm) if powering module with 5v.
+
 Changes in config.h:
 - uncomment `#define STEER_TYPE ST_AS5600`
 - comment other lines with `STEER_TYPE`
