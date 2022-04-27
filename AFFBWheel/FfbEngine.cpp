@@ -40,10 +40,7 @@ int16_t FfbEngine::calculateForce(AxisWheel* axis)
   int32_t totalForce = 0;
   int16_t tmpForce;
 
-  uint16_t t[5];
-  uint16_t t2[5];
-
-  TEffectState* effect;
+  volatile TEffectState* effect;
 
   int16_t _millis=millis();
   int16_t timeDiff=_millis-prevTime;
@@ -138,12 +135,12 @@ int16_t FfbEngine::calculateForce(AxisWheel* axis)
   return constrain(totalForce, -16383, 16383);
 }
 
-int16_t FfbEngine::constantForce(TEffectState*  effect)
+int16_t FfbEngine::constantForce(volatile TEffectState*  effect)
 {
     return  envelope(effect);
 }
 
-int16_t FfbEngine::rampForce(TEffectState*  effect)
+int16_t FfbEngine::rampForce(volatile TEffectState*  effect)
 {
   int16_t magnitude=envelope(effect);
   
@@ -157,7 +154,7 @@ int16_t FfbEngine::rampForce(TEffectState*  effect)
   }
 }
 
-int32_t FfbEngine::periodicForce(TEffectState* effect)
+int32_t FfbEngine::periodicForce(volatile TEffectState* effect)
 {
   while (effect->periodTime>effect->period)
     effect->periodTime-=effect->period;
@@ -181,7 +178,7 @@ int32_t FfbEngine::periodicForce(TEffectState* effect)
   return 0;
 }
 
-int16_t FfbEngine::envelope(TEffectState* effect)
+int16_t FfbEngine::envelope(volatile TEffectState* effect)
 {
     if (effect->attackTime)
     if (effect->elapsedTime < effect->attackTime)
@@ -199,7 +196,7 @@ int16_t FfbEngine::envelope(TEffectState* effect)
     return effect->magnitude;
 }
   
-int16_t FfbEngine::square(TEffectState*  effect, int16_t magnitude)
+int16_t FfbEngine::square(volatile TEffectState*  effect, int16_t magnitude)
 {
     if (effect->periodTime < effect->halfPeriod)
       return magnitude;
@@ -207,12 +204,12 @@ int16_t FfbEngine::square(TEffectState*  effect, int16_t magnitude)
       return -magnitude;
 }
 
-int16_t FfbEngine::sinefix(TEffectState*  effect, int16_t magnitude)
+int16_t FfbEngine::sinefix(volatile TEffectState*  effect, int16_t magnitude)
 {
     return (int32_t)magnitude * sin_fix(effect->periodTime * effect->periodC) >>14;
 }
 
-int16_t FfbEngine::triangle(TEffectState*  effect, int32_t magnitude)
+int16_t FfbEngine::triangle(volatile TEffectState*  effect, int32_t magnitude)
 {
     if (effect->periodTime < effect->halfPeriod)
       return -magnitude + (int32_t)((int32_t)magnitude * effect->periodTime * effect->periodC);
@@ -220,12 +217,12 @@ int16_t FfbEngine::triangle(TEffectState*  effect, int32_t magnitude)
       return 3 * magnitude - (int32_t)((int32_t)magnitude * effect->periodTime * effect->periodC);
 }
 
-int16_t FfbEngine::stdown(TEffectState*  effect, int32_t magnitude)
+int16_t FfbEngine::stdown(volatile TEffectState*  effect, int32_t magnitude)
 {
     return magnitude - (int32_t)((int32_t)magnitude * effect->periodTime * effect->periodC);
 } 
 
-int16_t FfbEngine::springForce(TEffectState*  effect, int16_t position) 
+int16_t FfbEngine::springForce(volatile TEffectState*  effect, int16_t position) 
 {
   int32_t  tempForce;
 
@@ -263,7 +260,7 @@ int16_t FfbEngine::springForce(TEffectState*  effect, int16_t position)
  * damper creates force agains velocity. 
  * Maximum value for velocity is needed for scaling, so it is set with maxVelocityDamper
  */
-int16_t FfbEngine::damperForce(TEffectState*  effect, int16_t velocity) 
+int16_t FfbEngine::damperForce(volatile TEffectState*  effect, int16_t velocity) 
 {
     int32_t  tempForce;
 
@@ -291,7 +288,7 @@ int16_t FfbEngine::damperForce(TEffectState*  effect, int16_t velocity)
  * Inertia effect should oppose acceleration.
  * maximum value for acceleration is set with maxAccelerationInertia
 */
-int16_t FfbEngine::inertiaForce(TEffectState*  effect, AxisWheel* axis) 
+int16_t FfbEngine::inertiaForce(volatile TEffectState*  effect, AxisWheel* axis) 
 {
     int32_t  tempForce;
     
@@ -332,7 +329,7 @@ int16_t FfbEngine::inertiaForce(TEffectState*  effect, AxisWheel* axis)
  * 
  * cpOffset and saturation ignored
  */
-int16_t FfbEngine::frictionForce(TEffectState*  effect, int16_t velocity) 
+int16_t FfbEngine::frictionForce(volatile TEffectState*  effect, int16_t velocity) 
 {
        
     if (velocity==0)
@@ -362,4 +359,6 @@ int16_t FfbEngine::frictionForce(TEffectState*  effect, int16_t velocity)
     {
       return ((int32_t)tVelocity * coefficient) >> 8;
     }
+
+    return 0;
 }

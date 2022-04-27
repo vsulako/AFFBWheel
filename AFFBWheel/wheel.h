@@ -81,7 +81,7 @@ class Wheel_
     Axis* analogAxes[7];
     uint32_t buttons;
     Wheel_();
-    int16_t update();
+    void update();
     FfbEngine ffbEngine;
     
     GUI_Report USB_GUI_Report;

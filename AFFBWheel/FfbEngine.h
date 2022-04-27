@@ -57,22 +57,22 @@ class FfbEngine {
     
     int16_t calculateForce(AxisWheel* axis);
     
-    int16_t constantForce(TEffectState*  effect);
-    int16_t rampForce(TEffectState*  effect);
-    int32_t periodicForce(TEffectState*  effect);
-    int16_t envelope(TEffectState* effect);
+    int16_t constantForce(volatile TEffectState*  effect);
+    int16_t rampForce(volatile TEffectState*  effect);
+    int32_t periodicForce(volatile TEffectState*  effect);
+    int16_t envelope(volatile TEffectState* effect);
     
-    int16_t sinefix(TEffectState*  effect, int16_t magnitude);
+    int16_t sinefix(volatile TEffectState*  effect, int16_t magnitude);
 
-    int16_t square(TEffectState*  effect, int16_t magnitude);
-    int16_t triangle(TEffectState*  effect, int32_t magnitude);
-    int16_t stdown(TEffectState*  effect, int32_t magnitude);
-    int16_t stup(TEffectState*  effect, int32_t magnitude);
+    int16_t square(volatile TEffectState*  effect, int16_t magnitude);
+    int16_t triangle(volatile TEffectState*  effect, int32_t magnitude);
+    int16_t stdown(volatile TEffectState*  effect, int32_t magnitude);
+    int16_t stup(volatile TEffectState*  effect, int32_t magnitude);
     
-    int16_t springForce(TEffectState*  effect, int16_t position);
-    int16_t damperForce(TEffectState*  effect, int16_t velocity);
-    int16_t inertiaForce(TEffectState*  effect, AxisWheel* axis);
-    int16_t frictionForce(TEffectState*  effect, int16_t velocity);
+    int16_t springForce(volatile TEffectState*  effect, int16_t position);
+    int16_t damperForce(volatile TEffectState*  effect, int16_t velocity);
+    int16_t inertiaForce(volatile TEffectState*  effect, AxisWheel* axis);
+    int16_t frictionForce(volatile TEffectState*  effect, int16_t velocity);
     
     float maxVelocityDamperC, maxVelocityFrictionC, maxAccelerationInertiaC;
     

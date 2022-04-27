@@ -102,7 +102,7 @@ void Axis::setDZ(int16_t dz)
     axisCenterP=center+dz;
     updateRangeFactor();
 }
-void Axis::setLimits(int16_t _min, int16_t _max, bool _auto=false)
+void Axis::setLimits(int16_t _min, int16_t _max, bool _auto)
 {
     axisMin=_min;
     axisMax=_max;

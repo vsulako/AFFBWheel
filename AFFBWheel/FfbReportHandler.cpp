@@ -247,7 +247,7 @@ void FfbReportHandler::SetEnvelope(USB_FFBReport_SetEnvelope_Output_Data_t* data
 
 void FfbReportHandler::SetCondition(USB_FFBReport_SetCondition_Output_Data_t* data, volatile TEffectState* effect)
 {
-  if (data->parameterBlockOffset & 0x0F !=0) //ignore Y axis
+  if ((data->parameterBlockOffset & 0x0F) !=0) //ignore Y axis
     return;
   effect->cpOffset = data->cpOffset;
   effect->positiveCoefficient = data->positiveCoefficient;
@@ -341,8 +341,6 @@ uint8_t* FfbReportHandler::FfbOnPIDStatus()
 
 void FfbReportHandler::FfbOnUsbData(uint8_t* data, uint16_t len)
 {
-  uint8_t i;
-
   uint8_t effectId = data[1]; // effectBlockIndex is always the second byte.
   switch (data[0])    // reportID
   {

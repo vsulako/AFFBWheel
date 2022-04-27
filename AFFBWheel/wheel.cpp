@@ -19,7 +19,7 @@ Wheel_::Wheel_(void)
 }
 
 
-int16_t Wheel_::update(void) 
+void Wheel_::update(void) 
 {
   
   wheelData data;

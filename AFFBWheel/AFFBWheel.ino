@@ -155,8 +155,6 @@ void load(bool defaults=false);
 
 void setup() {
 
-  int i;
-
   Serial.begin(SERIAL_BAUDRATE);
   Serial.setTimeout(50);
 
@@ -278,7 +276,6 @@ void mainLoop() {
 //Processing endstop and force feedback
 void processFFB()
 {
-    int16_t prevForce=force;
     int32_t excess=0;
     if (wheel.axisWheel->rawValue > wheel.axisWheel->axisMax)
        excess=wheel.axisWheel->rawValue - wheel.axisWheel->axisMax;
@@ -1052,7 +1049,7 @@ void processSerial()
 }
 
 //load and save settings
-void load(bool defaults=false)
+void load(bool defaults)
 {
   SettingsEEPROM settingsE;
   uint8_t i;
@@ -1125,7 +1122,7 @@ void load(bool defaults=false)
 void save()
 {
     SettingsEEPROM settingsE;
-    uint8_t i, checksum;
+    uint8_t i;
 
     settingsE.data=settings;
 

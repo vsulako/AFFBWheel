@@ -45,7 +45,7 @@ void BB_I2C::writeByte(uint8_t data)
   I2C_SDA_LOW;
 }
 
-void BB_I2C::readByte(uint8_t* pData, bool ack=true)
+void BB_I2C::readByte(uint8_t* pData, bool ack)
 {
     uint8_t b;
 

@@ -189,7 +189,7 @@ bool HID_::HID_SetReport(USBSetup& setup) {
       return true;
       }*/
   }
-
+  return (false);
 }
 
 bool HID_::setup(USBSetup& setup)
