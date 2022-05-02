@@ -395,12 +395,12 @@ Disadvantage: only one button can be pressed simultaneously, so only use case is
 Configuration example:
 
 ```
-#define APB						//uncomment to enable feature
-#define APB_PIN        A11			//analog pin
-#define APB_BTN_COUNT  2			//number of buttons connected
-#define APB_VALUES     32,96		//ADC values (0-255) for each button
-#define APB_TOLERANCE  10			//tolerance (plus-minus to ADC value)
-#define APB_BTNS       25,26		//numbers of redefined buttons (1-32)
+#define APB                     //uncomment to enable feature
+#define APB_PIN        A11      //analog pin
+#define APB_BTN_COUNT  2        //number of buttons connected
+#define APB_VALUES     32,96    //ADC values (0-255) for each button
+#define APB_TOLERANCE  10       //tolerance (plus-minus to ADC value)
+#define APB_BTNS       25,26    //numbers of redefined buttons (1-32)
 ```
 
 This means:
@@ -428,16 +428,16 @@ ADC values can be printed out by command `ahsout` in Serial monitor.
 Configuration in config.h:
 
 ```
-#define ASHIFTER 	//uncomment to enable feature
-#define ASHIFTER_PINX     A4	//analog pin for potentiometer X
-#define ASHIFTER_PINY     A5	//analog pin for potentiometer Y
-#define ASHIFTER_POS      8	//number of positions, 6 or 8
-#define ASHIFTER_Y1       50 	//zone bounds (0-255)
+#define ASHIFTER                //uncomment to enable feature
+#define ASHIFTER_PINX     A4    //analog pin for potentiometer X
+#define ASHIFTER_PINY     A5    //analog pin for potentiometer Y
+#define ASHIFTER_POS      8	    //number of positions, 6 or 8
+#define ASHIFTER_Y1       50    //zone bounds (0-255)
 #define ASHIFTER_Y2       200
 #define ASHIFTER_X1       64  
 #define ASHIFTER_X2       128  
 #define ASHIFTER_X3       192
-#define ASHIFTER_1ST_BTN  25	//number of button for pos 1 (1-32)
+#define ASHIFTER_1ST_BTN  25    //number of button for pos 1 (1-32)
 ```
 
 Buttons will be redefined in series, starting from ASHIFTER_1ST_BTN.  
@@ -450,10 +450,10 @@ Any 4 buttons can be defined for using as 8-position hat switch.
 Configuration в config.h:
 
 ```
-#define HATSWITCH	//uncomment to enable feature
-#define HAT_BTN_UP     20	//button numbers for hat directions
+#define HATSWITCH           //uncomment to enable feature
+#define HAT_BTN_UP     20   //button numbers for hat directions
 #define HAT_BTN_DOWN   21
 #define HAT_BTN_LEFT   22
 #define HAT_BTN_RIGHT  23
-#define HAT_CLR_BTNS   	//if this line is commented, selected buttons will continue to register presses along with hat switch
+#define HAT_CLR_BTNS   	    //if this line is commented, selected buttons will continue to register presses along with hat switch
 ```

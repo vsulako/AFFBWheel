@@ -410,12 +410,12 @@ Cхема:
 Пример конфигурации:
 
 ```
-#define APB			//раскомментировать для включения функции
-#define APB_PIN        A11	//аналоговый пин
-#define APB_BTN_COUNT  2	//количество подключаемых кнопок
-#define APB_VALUES     32,96	//Значения АЦП (0-255) для каждой кнопки
-#define APB_TOLERANCE  10	//допуск (плюс-минус к значению АЦП)
-#define APB_BTNS       25,26	//номера переназначаемых кнопок (1-32)
+#define APB	                   //раскомментировать для включения функции
+#define APB_PIN        A11     //аналоговый пин
+#define APB_BTN_COUNT  2       //количество подключаемых кнопок
+#define APB_VALUES     32,96   //Значения АЦП (0-255) для каждой кнопки
+#define APB_TOLERANCE  10      //допуск (плюс-минус к значению АЦП)
+#define APB_BTNS       25,26   //номера переназначаемых кнопок (1-32)
 ```
 
 Означает следующее:
@@ -446,16 +446,16 @@ Cхема:
 Настройка в config.h:
 
 ```
-#define ASHIFTER 					//раскоммментируйте для включения функции
-#define ASHIFTER_PINX     A4		//пин для потенциометра X
-#define ASHIFTER_PINY     A5		//пин для потенциометра Y
-#define ASHIFTER_POS      8   		//количество позиций - 6 или 8
-#define ASHIFTER_Y1       50 		//границы зон (0-255)
+#define ASHIFTER                //раскоммментируйте для включения функции
+#define ASHIFTER_PINX     A4    //пин для потенциометра X
+#define ASHIFTER_PINY     A5    //пин для потенциометра Y
+#define ASHIFTER_POS      8     //количество позиций - 6 или 8
+#define ASHIFTER_Y1       50    //границы зон (0-255)
 #define ASHIFTER_Y2       200
 #define ASHIFTER_X1       64  
 #define ASHIFTER_X2       128  
 #define ASHIFTER_X3       192
-#define ASHIFTER_1ST_BTN  25		//номер кнопки для позиции 1 (1-32)
+#define ASHIFTER_1ST_BTN  25    //номер кнопки для позиции 1 (1-32)
 ```
 
 Кнопки будут заменены последовательно, начиная с ASHIFTER_1ST_BTN.
