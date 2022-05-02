@@ -431,7 +431,7 @@ Configuration in config.h:
 #define ASHIFTER                //uncomment to enable feature
 #define ASHIFTER_PINX     A4    //analog pin for potentiometer X
 #define ASHIFTER_PINY     A5    //analog pin for potentiometer Y
-#define ASHIFTER_POS      8	    //number of positions, 6 or 8
+#define ASHIFTER_POS      8     //number of positions, 6 or 8
 #define ASHIFTER_Y1       50    //zone bounds (0-255)
 #define ASHIFTER_Y2       200
 #define ASHIFTER_X1       64  
