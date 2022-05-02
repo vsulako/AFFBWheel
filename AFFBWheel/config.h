@@ -155,7 +155,13 @@
 #define ASHIFTER_X3       192  
 #define ASHIFTER_1ST_BTN  25
 
-
+//Hat switch
+//#define HATSWITCH
+#define HAT_BTN_UP     13
+#define HAT_BTN_DOWN   15
+#define HAT_BTN_LEFT   14
+#define HAT_BTN_RIGHT  16
+#define HAT_CLR_BTNS   //clear buttons state
 
 //----------------------------FFB settings-------------------------------
 //default FFB PWM bitdepth

@@ -40,6 +40,22 @@ static const uint8_t wheelHIDDescriptor[] PROGMEM = {
       0x95, 0x20,             // Report Count (32 fields),
       0x75, 0x01,             // Report Size (1 bit),
       0x81, 0x02,             // INPUT (Data,Var,Abs) 
+
+#ifdef HATSWITCH
+      0x05, 0x01,             //        Usage Page (Desktop),
+      0x95, 0x01,             //        Report Count (1 field),
+      0x75, 0x04,             //        Report Size (4 bit),
+      0x25, 0x07,             //        Logical Maximum (7),
+      0x46, 0x3B, 0x01,       //        Physical Maximum (315),
+      //0x65, 0x14,             //        Unit (Degrees),
+      0x09, 0x39,             //        Usage (Hat Switch),
+      0x81, 0x42,             //        >>>> Input (Variable)
+
+      //padding 4bits
+      0x75, 0x04,             // REPORT_SIZE (06)
+      0x95, 0x01,             // REPORT_COUNT (01)
+      0x81, 0x03,             // Input (Constant, Variable)
+#endif
       
     0xc0,                   // END_COLLECTION
       
