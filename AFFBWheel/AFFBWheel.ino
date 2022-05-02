@@ -47,6 +47,9 @@ bool fvaOut=false;
 #ifdef APB
 bool apb_out=false;
 #endif
+#ifdef ASHIFTER
+bool ashifter_out=false;
+#endif
 
 uint16_t timerInfo;
 uint16_t loopCount;
@@ -787,6 +790,51 @@ void readButtons()
       centerButtonState=state;
       bitClear(wheel.buttons, settings.centerButton);
   }
+
+//analog shifter
+#ifdef ASHIFTER
+  uint8_t x=analogReadFast(ASHIFTER_PINX)>>2;
+  uint8_t y=analogReadFast(ASHIFTER_PINY)>>2;
+  uint8_t g;
+
+  if (ashifter_out)
+  {
+    Serial.print(F("Analog shifter X:"));
+    Serial.print(x);
+    Serial.print(" Y:");
+    Serial.println(y);
+  }
+  
+  //clear bits
+  #if ASHIFTER_POS == 8
+  wheel.buttons&=~((uint32_t)0xff << (ASHIFTER_1ST_BTN-1));
+  #endif
+  #if ASHIFTER_POS == 6
+  wheel.buttons&=~((uint32_t)0x3f << (ASHIFTER_1ST_BTN-1));
+  #endif
+
+  //set bits
+  if (y<ASHIFTER_Y1)
+    g=0b00000001;
+  else
+  if (y>ASHIFTER_Y2)
+    g=0b00000010;
+  else
+    return;
+
+  if (x>ASHIFTER_X1)
+    g<<=2;
+  if (x>ASHIFTER_X2)
+    g<<=2;
+  
+  #if ASHIFTER_POS == 8
+  if (x>ASHIFTER_X3)
+    g<<=2;
+  #endif
+  
+ wheel.buttons|=((uint32_t)g<<(ASHIFTER_1ST_BTN-1));
+#endif
+
 }
 //---------------------------------------- end buttons ----------------------------------------------
 
@@ -1073,6 +1121,12 @@ void processSerial()
      }
 #endif     
 
+#ifdef ASHIFTER
+     if (strcmp_P(cmd, PSTR("ahsout"))==0)
+     {
+        ashifter_out=!ashifter_out;
+     }
+#endif
   }
 }
 

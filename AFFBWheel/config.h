@@ -136,12 +136,26 @@
 #define MCP23017_ADDR2  0x21
 
 //analog pin buttons
-#define APB
+//#define APB
 #define APB_PIN        A11
 #define APB_BTN_COUNT  2
 #define APB_VALUES     32,96
 #define APB_TOLERANCE  10
 #define APB_BTNS       25,26
+
+//analog H-shifter
+//#define ASHIFTER
+#define ASHIFTER_PINX     A4
+#define ASHIFTER_PINY     A5
+#define ASHIFTER_POS      8   //6 or 8 positions
+#define ASHIFTER_Y1       50 
+#define ASHIFTER_Y2       200
+#define ASHIFTER_X1       64  
+#define ASHIFTER_X2       128  
+#define ASHIFTER_X3       192  
+#define ASHIFTER_1ST_BTN  25
+
+
 
 //----------------------------FFB settings-------------------------------
 //default FFB PWM bitdepth
