@@ -135,6 +135,14 @@
 #define MCP23017_ADDR1  0x20
 #define MCP23017_ADDR2  0x21
 
+//analog pin buttons
+#define APB
+#define APB_PIN        A11
+#define APB_BTN_COUNT  2
+#define APB_VALUES     32,96
+#define APB_TOLERANCE  10
+#define APB_BTNS       25,26
+
 //----------------------------FFB settings-------------------------------
 //default FFB PWM bitdepth
 #define DEFAULT_FFB_BITDEPTH  9   //15.6 KHz

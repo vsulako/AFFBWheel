@@ -44,6 +44,10 @@ int16_t force;
 bool timing=false;
 bool fvaOut=false;
 
+#ifdef APB
+bool apb_out=false;
+#endif
+
 uint16_t timerInfo;
 uint16_t loopCount;
 
@@ -738,6 +742,23 @@ void readButtons()
   *((uint32_t *)d)=~*((uint32_t *)d);
 #endif
 
+//analog pin to buttons
+#ifdef APB
+  static const uint8_t apb_values[] ={APB_VALUES};
+  static const uint8_t apb_btns[]  ={APB_BTNS};
+  uint8_t apb_val=analogReadFast(APB_PIN)>>2;
+
+  if (apb_out)
+  {
+    Serial.print(F("APB: "));
+    Serial.println(apb_val);
+  }
+  
+  for(i=0;i<APB_BTN_COUNT;i++)
+      bitWrite(*((uint32_t *)d), apb_btns[i]-1, ((apb_val>apb_values[i]-APB_TOLERANCE) && (apb_val<apb_values[i]+APB_TOLERANCE)));
+#endif
+
+
   //debounce
   if (settings.debounce)
   {
@@ -1044,6 +1065,13 @@ void processSerial()
        Serial.print(F("Debounce:"));
        Serial.println(settings.debounce);
      }
+
+#ifdef APB
+     if (strcmp_P(cmd, PSTR("apbout"))==0)
+     {
+        apb_out=!apb_out;
+     }
+#endif     
 
   }
 }
