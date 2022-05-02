@@ -7,7 +7,7 @@
 
 #define I2C_IS_SDA_HIGH (digitalReadFast(I2C_PIN_SDA))
 
-#define I2C_START {I2C_SDA_LOW;__builtin_avr_delay_cycles(2);I2C_SCL_LOW;}
+#define I2C_START {I2C_SDA_LOW;__builtin_avr_delay_cycles(4);I2C_SCL_LOW;}
 #define I2C_STOP  {I2C_SCL_HIGH;I2C_SDA_HIGH;}
 
 void BB_I2C::setAddr(uint8_t addr)
