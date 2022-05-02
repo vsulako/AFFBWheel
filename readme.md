@@ -405,8 +405,8 @@ Configuration example:
 
 This means:
 - 2 buttons are connected to pin A11, they will replace buttons #25 and #26
-- button #25 will be considered pressed, if ADC value of A11 will be around 32±20, i.e. from 12 to 52.
-- button #26 will be considered pressed, if ADC value of A11 will be around 96±20, i.e. from 76 to 116.
+- button #25 will be considered pressed, if ADC value of A11 will be around 32±10, i.e. from 22 to 42.
+- button #26 will be considered pressed, if ADC value of A11 will be around 96±10, i.e. from 86 to 106.
 
 Command `apbout` in Serial monitor will print ADC values from selected pin.
 
