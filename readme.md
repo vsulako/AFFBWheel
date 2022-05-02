@@ -376,3 +376,84 @@ Changes in config.h:
 	#define I2C_PIN_SCL 7
 	```
 In case of using another I2C devices (AS5600,AD1015) - connect in parallel to same pins.
+
+## Additional features
+
+### Buttons on analog pin
+
+There is possibility to use multiple buttons, connected to single analog arduino pin.
+
+Wiring diagrams:
+
+![Wiring diagram](images/analog_buttons.png)
+
+Principle: when button is pressed, analog pin voltage is changed.
+
+Advantage: only 3 or 2 wires can be used to connect multiple buttons.  
+Disadvantage: only one button can be pressed simultaneously, so only use case is for gear shifter.
+
+Configuration example:
+
+```
+#define APB						//uncomment to enable feature
+#define APB_PIN        A11			//analog pin
+#define APB_BTN_COUNT  2			//number of buttons connected
+#define APB_VALUES     32,96		//ADC values (0-255) for each button
+#define APB_TOLERANCE  10			//tolerance (plus-minus to ADC value)
+#define APB_BTNS       25,26		//numbers of redefined buttons (1-32)
+```
+
+This means:
+- 2 buttons are connected to pin A11, they will replace buttons #25 and #26
+- button #25 will be considered pressed, if ADC value of A11 will be around 32±20, i.e. from 12 to 52.
+- button #26 will be considered pressed, if ADC value of A11 will be around 96±20, i.e. from 76 to 116.
+
+Command `apbout` in Serial monitor will print ADC values from selected pin.
+
+### Analog H-shifter.
+
+A H-shifter made like stick, with 2 potentiometers instead of buttons can be used.  
+Potentiometers are connected to unused analog pins.  
+H-shifter can have 6 or 8 positions.
+
+![](images/analog_shifter.png)
+
+X axis represents ADC from one potentiometer, Y axis from another.  
+Button N is considered pressed, if current X/Y values are in corresponding zone (gray).  
+X1,X2,X3,Y1,Y2 values set zone bounds. Values must be in ascending order, i.e. X1<X2<X3, Y1<Y2.  
+X3 is not used for 6-position config.
+
+ADC values can be printed out by command `ahsout` in Serial monitor.
+
+Configuration in config.h:
+
+```
+#define ASHIFTER 					//uncomment to enable feature
+#define ASHIFTER_PINX     A4		//analog pin for potentiometer X
+#define ASHIFTER_PINY     A5		//analog pin for potentiometer Y
+#define ASHIFTER_POS      8   		//number of positions, 6 or 8
+#define ASHIFTER_Y1       50 		//zone bounds (0-255)
+#define ASHIFTER_Y2       200
+#define ASHIFTER_X1       64  
+#define ASHIFTER_X2       128  
+#define ASHIFTER_X3       192
+#define ASHIFTER_1ST_BTN  25		//number of button for pos 1 (1-32)
+```
+
+Buttons will be redefined in series, starting from ASHIFTER_1ST_BTN.  
+If 8-position is used, first button is 25, shifter will use buttons #25,26,27,28,29,30,31,32.
+
+### Hat switch
+
+Any 4 buttons can be defined for using as 8-position hat switch.
+
+Configuration в config.h:
+
+```
+#define HATSWITCH				//uncomment to enable feature
+#define HAT_BTN_UP     20		//button numbers for hat directions
+#define HAT_BTN_DOWN   21
+#define HAT_BTN_LEFT   22
+#define HAT_BTN_RIGHT  23
+#define HAT_CLR_BTNS   			//if this line is commented, selected buttons will continue to register presses along with hat switch
+```
