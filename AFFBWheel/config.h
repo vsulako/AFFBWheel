@@ -164,6 +164,8 @@
 #define HAT_CLR_BTNS   //clear buttons state
 
 //----------------------------FFB settings-------------------------------
+//#define MOTOR_ENABLE_PIN      5  //if is set, selected pin will output 1 when FFB is active and 0 otherwise.
+
 //default FFB PWM bitdepth
 #define DEFAULT_FFB_BITDEPTH  9   //15.6 KHz
 

@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 #include "config.h"
+#include <digitalWriteFast.h>
 
 class Motor
 {

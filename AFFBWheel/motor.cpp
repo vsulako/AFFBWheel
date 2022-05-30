@@ -12,12 +12,24 @@ void Motor::begin()
   OCR1B=0;
   pinMode(9, OUTPUT);
   pinMode(10, OUTPUT);
+
+  #ifdef MOTOR_ENABLE_PIN
+    pinMode(MOTOR_ENABLE_PIN, OUTPUT);
+    digitalWriteFast(MOTOR_ENABLE_PIN, 0);
+  #endif
 }
 
 //values -16383..16383
 void Motor::setForce(int16_t force)
 {
   force=constrain(force,-16383,16383);
+
+  #ifdef MOTOR_ENABLE_PIN
+  if (force!=0)
+    digitalWriteFast(MOTOR_ENABLE_PIN, 1)
+  else
+    digitalWriteFast(MOTOR_ENABLE_PIN, 0);
+  #endif
 
   if (force>0)
   {
