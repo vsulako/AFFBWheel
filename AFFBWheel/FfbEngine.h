@@ -79,3 +79,5 @@ class FfbEngine {
   private:
     int16_t prevTime;
 };
+
+int16_t applyGain(int32_t force, int16_t gain);

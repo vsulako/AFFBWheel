@@ -105,7 +105,7 @@ int16_t FfbEngine::calculateForce(AxisWheel* axis)
             tmpForce = ((int32_t)tmpForce * (effect->gain+1)) >> 8;
 
           if (settings.gain[effect->effectType]!=1024)
-            tmpForce = ((int32_t)tmpForce * settings.gain[effect->effectType]) >> 10;
+            tmpForce = applyGain(tmpForce, settings.gain[effect->effectType]);
 
           tmpForce = constrain(tmpForce, -16383, 16383);
         }
@@ -129,7 +129,7 @@ int16_t FfbEngine::calculateForce(AxisWheel* axis)
       totalForce = (totalForce * (ffbReportHandler->deviceGain +1)) >> 8;
 
     if (settings.gain[GAIN_TOTAL]!=1024)
-      totalForce = (totalForce * settings.gain[GAIN_TOTAL]) >> 10;
+      totalForce = applyGain(totalForce, settings.gain[GAIN_TOTAL]);
   }
 
   return constrain(totalForce, -16383, 16383);
@@ -361,4 +361,11 @@ int16_t FfbEngine::frictionForce(volatile TEffectState*  effect, int16_t velocit
     }
 
     return 0;
+}
+
+int16_t applyGain(int32_t force, int16_t gain)
+{
+    force=force * gain;
+    force=constrain(force, -16383L<<10, 16383L<<10);
+    return force >> 10;
 }

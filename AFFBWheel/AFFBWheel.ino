@@ -298,7 +298,7 @@ void processFFB()
         force = sign(excess)*16383;
         
       if (settings.gain[GAIN_ENDSTOP]!=1024)
-          force=((int32_t)force * settings.gain[GAIN_ENDSTOP]) >>10;
+          force=applyGain(force, settings.gain[GAIN_ENDSTOP]);
     }
     else
     {
