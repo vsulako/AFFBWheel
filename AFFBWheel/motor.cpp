@@ -1,22 +1,23 @@
 #include "motor.h"
 
+  
 void Motor::begin()
 {
-  //Phase and Frequency Correct PWM, TOP=ICR1
-  TCCR1A=(1<<COM1A1) | (0<<COM1A0) | (1<<COM1B1) | (0<<COM1B0) | (0<<COM1C1) | (0<<COM1C0) | (0<<WGM11) | (0<<WGM10);
-  TCCR1B=(0<<ICNC1) | (0<<ICES1) | (1<<WGM13) | (0<<WGM12) | (0<<CS12) | (0<<CS11) | (1<<CS10);
+  //Phase and Frequency Correct PWM, TOP=ICR3
+  TCCR3A=(1<<COM3A1) | (0<<COM3A0) | (0<<COM3B1) | (0<<COM3B0) | (0<<COM3C1) | (0<<COM3C0) | (0<<WGM31) | (0<<WGM30);
+  TCCR3B=(0<<ICNC3) | (0<<ICES3) | (1<<WGM33) | (0<<WGM32) | (0<<CS32) | (0<<CS31) | (1<<CS30);
+
+  //Output PWM to pin 5
+  pinMode(5, OUTPUT);  
   
   setBitDepth(DEFAULT_FFB_BITDEPTH);
   
-  OCR1A=0;
-  OCR1B=0;
+  OCR3A=0;
+
   pinMode(9, OUTPUT);
   pinMode(10, OUTPUT);
-
-  #ifdef MOTOR_ENABLE_PIN
-    pinMode(MOTOR_ENABLE_PIN, OUTPUT);
-    digitalWriteFast(MOTOR_ENABLE_PIN, 0);
-  #endif
+  digitalWriteFast(9, 0);
+  digitalWriteFast(10, 0);
 }
 
 //values -16383..16383
@@ -24,28 +25,27 @@ void Motor::setForce(int16_t force)
 {
   force=constrain(force,-16383,16383);
 
-  #ifdef MOTOR_ENABLE_PIN
-  if (force!=0)
-    digitalWriteFast(MOTOR_ENABLE_PIN, 1)
-  else
-    digitalWriteFast(MOTOR_ENABLE_PIN, 0);
-  #endif
-
   if (force>0)
   {
-    OCR1A=force>>bitShift;
-    OCR1B=0;
+    digitalWriteFast(9, 1);
+    digitalWriteFast(10, 0);
+    
+    OCR3A=(1+force)>>bitShift;
   }
   else 
   if (force<0)  
   {
-    OCR1A=0;
-    OCR1B=-(force>>bitShift);
+    digitalWriteFast(9, 0);
+    digitalWriteFast(10, 1);
+    
+    OCR3A=(1-force)>>bitShift;
   }
   else
   {
-    OCR1A=0;
-    OCR1B=0;
+    digitalWriteFast(10, 0);
+    digitalWriteFast(9, 0);
+
+    OCR3A=0;
   }
 }
 
@@ -54,5 +54,5 @@ void Motor::setBitDepth(uint8_t value)
   value=constrain(value,1,14);
   bitDepth=value;
   bitShift=14-bitDepth;
-  ICR1=1<<bitDepth;
+  ICR3=1<<bitDepth;
 }
