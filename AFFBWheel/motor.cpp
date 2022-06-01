@@ -33,14 +33,14 @@ void Motor::setForce(int16_t force)
 
   if (force>0)
   {
-    OCR1A=force>>bitShift;
+    OCR1A=(1+force)>>bitShift;
     OCR1B=0;
   }
   else 
   if (force<0)  
   {
     OCR1A=0;
-    OCR1B=-(force>>bitShift);
+    OCR1B=(1-force)>>bitShift;
   }
   else
   {
