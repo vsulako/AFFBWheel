@@ -44,6 +44,10 @@ int16_t force;
 bool timing=false;
 bool fvaOut=false;
 
+int16_t endstop_offset=DEFAULT_ENDSTOP_OFFSET;
+int16_t endstop_width=DEFAULT_ENDSTOP_WIDTH;
+
+
 #ifdef APB
 bool apb_out=false;
 #endif
@@ -290,9 +294,10 @@ void processFFB()
        excess=wheel.axisWheel->rawValue + wheel.axisWheel->axisMax;
     if (excess)
     {
-      if ((excess<1023)&&(excess>-1023))
+      int32_t absExcess=abs(excess);
+      if (absExcess<endstop_width)
       {
-        force = sign(excess)*(8192+(abs(excess)<<3));
+        force = sign(excess) * (endstop_offset + (absExcess * (16383 - endstop_offset) / endstop_width));
       }
       else
         force = sign(excess)*16383;
@@ -1112,6 +1117,19 @@ void processSerial()
           settings.debounce=arg1;
        Serial.print(F("Debounce:"));
        Serial.println(settings.debounce);
+     }
+
+     //Endstop
+     if (strcmp_P(cmd, PSTR("endstop"))==0)
+     {
+       if (arg1>=0)
+          endstop_offset=arg1;
+       if (arg2>=0)
+          endstop_width=arg2;
+       Serial.print(F("Endstop: offset:"));
+       Serial.print(endstop_offset);
+       Serial.print(F(" width:"));
+       Serial.println(endstop_width);
      }
 
 #ifdef APB
