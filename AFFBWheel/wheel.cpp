@@ -26,29 +26,28 @@ void Wheel_::update(void)
 
   data.axes[0]=axisWheel->value;
 
-  data.axes[1]=analogAxes[AXIS_ACC]->value;
-  data.axes[2]=analogAxes[AXIS_BRAKE]->value;
-  data.axes[3]=analogAxes[AXIS_CLUTCH]->value;
+  data.axes[1]=analogAxes[AXIS_AUX1]->value;//z
+  data.axes[2]=analogAxes[AXIS_AUX2]->value;//comb
+  data.axes[3]=analogAxes[AXIS_AUX3]->value;//rx
+  data.axes[4]=analogAxes[AXIS_AUX4]->value;//ry
 
-  data.axes[4]=analogAxes[AXIS_AUX1]->value;
-  data.axes[5]=analogAxes[AXIS_AUX2]->value;
-  data.axes[6]=analogAxes[AXIS_AUX3]->value;
-  data.axes[7]=analogAxes[AXIS_AUX4]->value;
+  data.axes[5]=analogAxes[AXIS_BRAKE]->value;
+  data.axes[6]=analogAxes[AXIS_CLUTCH]->value;
+  data.axes[7]=analogAxes[AXIS_ACC]->value;
 
-#ifdef HATSWITCH
   data.hat=getHatSwitch();
-#endif
   
   data.buttons=buttons;
 
   HID().RecvFfbReport();
-  HID().SendReport(0x01, &data, sizeof(data));
+  HID().SendReport(0x00, &data, sizeof(data));
 
+/*
   if (USB_GUI_Report.command)
   {
     HID().SendReport(16, &USB_GUI_Report, sizeof(USB_GUI_Report));
     USB_GUI_Report.command=0;
-  }
+  }*/
 }
 
 

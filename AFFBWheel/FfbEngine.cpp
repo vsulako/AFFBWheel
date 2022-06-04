@@ -78,6 +78,7 @@ int16_t FfbEngine::calculateForce(AxisWheel* axis)
           case USB_EFFECT_TRIANGLE:
           case USB_EFFECT_SAWTOOTHDOWN:
           case USB_EFFECT_SAWTOOTHUP:
+          case USB_EFFECT_LOGITECH_TRAPEZOID:
             effect->periodTime += timeDiff;
             tmpForce = periodicForce(effect);
             break;
@@ -88,26 +89,33 @@ int16_t FfbEngine::calculateForce(AxisWheel* axis)
             tmpForce = damperForce(effect, axis->velocity);
             break;
           case USB_EFFECT_INERTIA:
-            tmpForce = inertiaForce(effect, axis);
+            //tmpForce = inertiaForce(effect, axis);
             break;
           case USB_EFFECT_FRICTION:
             tmpForce = frictionForce(effect, axis->velocity);
             break;
+
+          case USB_EFFECT_LOGITECH_VARIABLE:
+            tmpForce = logitechVariableForce(effect);
+            break;
         }
         
         //applying effect gains
-        if ((effect->gain==0)||(settings.gain[effect->effectType]==0))
-          tmpForce = 0;
-        else
+        if (effect->effectType<0x0C)
         {
-          
-          if (effect->gain!=255)
-            tmpForce = ((int32_t)tmpForce * (effect->gain+1)) >> 8;
-
-          if (settings.gain[effect->effectType]!=1024)
-            tmpForce = applyGain(tmpForce, settings.gain[effect->effectType]);
-
-          tmpForce = constrain(tmpForce, -16383, 16383);
+          if ((effect->gain==0)||(settings.gain[effect->effectType]==0))
+            tmpForce = 0;
+          else
+          {
+            
+            if (effect->gain!=255)
+              tmpForce = ((int32_t)tmpForce * (effect->gain+1)) >> 8;
+  
+            if (settings.gain[effect->effectType]!=1024)
+              tmpForce = applyGain(tmpForce, settings.gain[effect->effectType]);
+  
+            tmpForce = constrain(tmpForce, -16383, 16383);
+          }
         }
 
         totalForce+=tmpForce;
@@ -154,6 +162,21 @@ int16_t FfbEngine::rampForce(volatile TEffectState*  effect)
   }
 }
 
+
+int16_t FfbEngine::logitechVariableForce(volatile TEffectState*  effect)
+{
+  int16_t magnitude=envelope(effect);
+  
+  if (effect->elapsedTime > effect->period)
+  {
+    return effect->offset + magnitude;
+  }
+  else
+  {
+    return effect->offset + (int32_t)(effect->elapsedTime * effect->periodC );
+  }
+}
+
 int32_t FfbEngine::periodicForce(volatile TEffectState* effect)
 {
   while (effect->periodTime>effect->period)
@@ -166,13 +189,15 @@ int32_t FfbEngine::periodicForce(volatile TEffectState* effect)
     case USB_EFFECT_SQUARE:
       return effect->offset + square(effect, magnitude);
     case USB_EFFECT_SINE:
-      return effect->offset + sinefix(effect, magnitude);
+      //return effect->offset + sinefix(effect, magnitude);
     case USB_EFFECT_TRIANGLE:
       return effect->offset + triangle(effect, magnitude);
     case USB_EFFECT_SAWTOOTHDOWN:
       return effect->offset + stdown(effect, magnitude);
     case USB_EFFECT_SAWTOOTHUP:
       return effect->offset - stdown(effect, magnitude);
+    case USB_EFFECT_LOGITECH_TRAPEZOID:
+      return effect->offset - logitechTrapezoidForce(effect, magnitude);
   }
 
   return 0;
@@ -195,7 +220,18 @@ int16_t FfbEngine::envelope(volatile TEffectState* effect)
 
     return effect->magnitude;
 }
-  
+
+int16_t FfbEngine::logitechTrapezoidForce(volatile TEffectState*  effect, int32_t magnitude)
+{
+     if (effect->periodTime<effect->deadBand)  //полка T1
+        return effect->magnitude;
+     if (effect->periodTime<effect->deadBand+effect->halfPeriod)  //спуск
+        return (int32_t)effect->magnitude * (effect->deadBand + effect->halfPeriod - effect->periodTime) / effect->halfPeriod;
+     if (effect->periodTime<effect->deadBand+effect->halfPeriod+effect->cpOffset)  //полка T2
+        return 0;
+     return (int32_t)effect->magnitude * (effect->periodTime - effect->deadBand - effect->halfPeriod - effect->cpOffset) / effect->halfPeriod;
+}
+
 int16_t FfbEngine::square(volatile TEffectState*  effect, int16_t magnitude)
 {
     if (effect->periodTime < effect->halfPeriod)
@@ -230,13 +266,13 @@ int16_t FfbEngine::springForce(volatile TEffectState*  effect, int16_t position)
 
   if (position < (effect->cpOffset - (int16_t)effect->deadBand)) 
   {
-    tempForce = ((position - (effect->cpOffset - (int32_t)effect->deadBand)) * effect->negativeCoefficient) >> 14;
+    tempForce = ((position - (effect->cpOffset - (int32_t)effect->deadBand)) * effect->negativeCoefficient) >> (14 - 2);
     tempForce = constrain(tempForce, -(int16_t)effect->negativeSaturation, effect->negativeSaturation);
   }
   else 
   if (position > (effect->cpOffset + (int16_t)effect->deadBand)) 
   {
-    tempForce = ((position - (effect->cpOffset + (int32_t)effect->deadBand)) * effect->positiveCoefficient) >> 14;
+    tempForce = ((position - (effect->cpOffset + (int32_t)effect->deadBand)) * effect->positiveCoefficient) >> (14 - 2);
     tempForce = constrain(tempForce, -(int16_t)effect->positiveSaturation, effect->positiveSaturation);
   }
   else

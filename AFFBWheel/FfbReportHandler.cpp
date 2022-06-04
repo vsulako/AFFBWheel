@@ -25,6 +25,8 @@
 */
 
 #include "FfbReportHandler.h"
+
+
 FfbReportHandler::FfbReportHandler() {
   nextEID = 1;
   devicePaused = 0;
@@ -341,6 +343,22 @@ uint8_t* FfbReportHandler::FfbOnPIDStatus()
 
 void FfbReportHandler::FfbOnUsbData(uint8_t* data, uint16_t len)
 {
+  uint16_t i;
+  Serial.println();
+  Serial.print("RAW: <");
+  Serial.print(len);
+  Serial.print("> ");
+  
+  for(i=0;i<len;i++)
+  {
+    Serial.print(data[i],HEX);
+    Serial.print(" ");
+  }
+  Serial.println();
+  
+  logitechUSBData(data, len);
+  return;
+  /*
   uint8_t effectId = data[1]; // effectBlockIndex is always the second byte.
   switch (data[0])    // reportID
   {
@@ -392,4 +410,142 @@ void FfbReportHandler::FfbOnUsbData(uint8_t* data, uint16_t len)
     default:
       break;
   }
-};
+*/
+}
+
+void FfbReportHandler::logitechUSBData(uint8_t* data, uint8_t len)
+{
+      uint8_t slots,slot;
+      uint8_t cmd;
+
+      //first byte is command & force slots
+      slots=data[0] >> 4;
+      cmd=data[0] & 0b00001111;
+      Serial.print("CMD: ");
+      Serial.print(cmd, HEX);
+      Serial.print(" slots: ");
+      for(slot=0;slot<4;slot++)
+        Serial.print(bitRead(slots,slot));
+      Serial.println();
+
+      //commands for default spring
+      //effect #0 is reserved for default X spring
+      if (slots & 0b00000011)  //only X spring
+      switch (cmd)
+      {
+            case LOGITECH_CMD_DEFAULTSPRINGON://Default Spring On
+                  Serial.println(F("DefSpring On"));
+                  StartEffect(0);
+                break;
+            case LOGITECH_CMD_DEFAULTSPRINGOFF://Default Spring Off
+                  Serial.println(F("DefSpring Off"));
+                StopEffect(0);
+                break;
+            case LOGITECH_CMD_SETDEFAULTSPRING: //set default spring
+                  Serial.println(F("Set Default Spring"));
+                LogitechFFB::downloadForce(data,0,&gEffectStates[0]);
+                break;
+      }
+
+      //other commands, unused
+      switch (cmd)
+      {
+            case LOGITECH_CMD_NORMALMODE:
+                  if (slots==0x0F)
+                  {
+                      Serial.print(F("Ext: "));
+                      switch (data[1])
+                      {
+                          case LOGITECH_EXTCMD_DFPPRO:
+                            Serial.print(F("Switch DFP PRO"));
+                            break;
+                          case LOGITECH_EXTCMD_WRANGE200:
+                            Serial.print(F("wheel range 200"));
+                            break;
+                          case LOGITECH_EXTCMD_WRANGE900:
+                            Serial.print(F("wheel range 900"));
+                            break;
+                          case LOGITECH_EXTCMD_DEVMODE:
+                            Serial.print(F("Change Device Mode"));
+                            break;
+                          case LOGITECH_EXTCMD_REVIDENTITY:
+                            Serial.print(F("revert identity"));
+                            break;
+                          case LOGITECH_EXTCMD_SWG25DETACH:
+                            Serial.print(F("G25+USB Detach"));
+                            break;
+                          case LOGITECH_EXTCMD_SWG25NODETACH:
+                            Serial.print(F("G25 wo USB Detach"));
+                            break;
+                          case LOGITECH_EXTCMD_RPMLEDS:
+                            Serial.print(F("Set RPM LEDs"));
+                            break;
+                          case LOGITECH_EXTCMD_WRANGE:
+                            Serial.print(F("Wheel Range Change: "));
+                            
+                            //Serial.print(((uint16_t*)data[2]<<8) | data[3]);
+                            //Serial.print(' ');
+                            //Serial.print(((uint16_t)data[3]<<8) | data[2]);
+
+                            Serial.print(*(uint16_t*)(data+2));
+                            Serial.println();
+                            break;
+                      }
+                      Serial.println();
+                  }
+                  else
+                      Serial.println(F("Normal mode"));
+                break;
+            case LOGITECH_CMD_SETLED:
+                  Serial.println(F("Set LED"));
+                break;
+            case LOGITECH_CMD_SETWATCHDOG: 
+                  Serial.println(F("Set watchdog"));
+                break;
+            case LOGITECH_CMD_RAWMODE: 
+                  Serial.println(F("Raw mode"));
+                break;
+            case LOGITECH_CMD_FIXEDLOOP: 
+                  Serial.print(F("Set fixedloop"));
+                  Serial.println(data[1]);
+                break;
+            case LOGITECH_CMD_SETDEADBAND: 
+                  Serial.println(F("Set deadband"));
+                break;
+      }
+
+      //commands for multiple slots
+      for(slot=1;slot<=4;slot++)
+      if (bitRead(slots, slot-1))
+      {
+          switch (cmd)
+          {
+              case LOGITECH_CMD_DOWNLOADFORCE: //Download Force
+              case LOGITECH_CMD_REFRESHFORCE: //Refresh Force
+                  LogitechFFB::downloadForce(data, slot, &gEffectStates[slot]);
+                  Serial.print(F("DL Force #"));
+                  Serial.print(slot);
+                  Serial.println();
+                  break;
+               case LOGITECH_CMD_DOWNLOADPLAYFORCE: //Download and Play Force
+                  Serial.print(F("DL and Play #"));
+                  Serial.print(slot);
+                  Serial.println();
+                  LogitechFFB::downloadForce(data, slot, &gEffectStates[slot]);
+                  StartEffect(slot);
+                  break;
+              case LOGITECH_CMD_PLAYFORCE: //Play Force
+                  Serial.print(F("Play #"));
+                  Serial.print(slot);
+                  Serial.println();
+                  StartEffect(slot);
+                  break;
+              case LOGITECH_CMD_STOPFORCE: //Stop Force
+                  Serial.print(F("Stop #"));
+                  Serial.print(slot);
+                  Serial.println();
+                  StopEffect(slot);
+                  break;
+          }
+      }
+}

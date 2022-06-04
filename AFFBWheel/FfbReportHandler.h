@@ -27,6 +27,8 @@
 
 #include <Arduino.h>
 #include "HIDReportType.h"
+#include "logitechFFB.h"
+
 
 typedef struct
 {
@@ -72,7 +74,6 @@ class FfbReportHandler {
     void SetPeriodic(USB_FFBReport_SetPeriodic_Output_Data_t* data, volatile TEffectState* effect);
     void SetConstantForce(USB_FFBReport_SetConstantForce_Output_Data_t* data, volatile TEffectState* effect);
     void SetRampForce(USB_FFBReport_SetRampForce_Output_Data_t* data, volatile TEffectState* effect);
-
    
     // Handle incoming data from USB
     void FfbOnCreateNewEffect(USB_FFBReport_CreateNewEffect_Feature_Data_t* inData);
@@ -83,6 +84,7 @@ class FfbReportHandler {
 
     USB_GUI_Command usbCommand;
     
+    void logitechUSBData(uint8_t* data, uint8_t len);
 };
 
 extern FfbReportHandler ffbReportHandler;

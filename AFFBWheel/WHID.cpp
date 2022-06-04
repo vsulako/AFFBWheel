@@ -98,10 +98,18 @@ void HID_::AppendDescriptor(HIDSubDescriptor *node)
 
 int HID_::SendReport(uint8_t id, const void* data, int len)
 {
-  auto ret = USB_Send(HID_ENDPOINT_IN, &id, 1);
-  if (ret < 0) return ret;
-  auto ret2 = USB_Send(HID_ENDPOINT_IN | TRANSFER_RELEASE, data, len);
-  if (ret2 < 0) return ret2;
+  int8_t ret = 0;
+  if (id!=0)
+  {
+    ret = USB_Send(HID_ENDPOINT_IN, &id, 1);
+    if (ret < 0) 
+      return ret;
+  }
+  
+  int ret2 = USB_Send(HID_ENDPOINT_IN | TRANSFER_RELEASE, data, len);
+  if (ret2 < 0) 
+    return ret2;
+    
   return ret + ret2;
 }
 

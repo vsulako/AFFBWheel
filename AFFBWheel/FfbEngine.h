@@ -73,6 +73,9 @@ class FfbEngine {
     int16_t damperForce(volatile TEffectState*  effect, int16_t velocity);
     int16_t inertiaForce(volatile TEffectState*  effect, AxisWheel* axis);
     int16_t frictionForce(volatile TEffectState*  effect, int16_t velocity);
+
+    int16_t logitechVariableForce(volatile TEffectState*  effect);
+    int16_t logitechTrapezoidForce(volatile TEffectState*  effect, int32_t magnitude);
     
     float maxVelocityDamperC, maxVelocityFrictionC, maxAccelerationInertiaC;
     

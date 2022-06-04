@@ -211,6 +211,9 @@ typedef struct
 #define USB_EFFECT_FRICTION			0x0B
 #define USB_EFFECT_CUSTOM				0x0C
 
+#define USB_EFFECT_LOGITECH_VARIABLE        0x80
+#define USB_EFFECT_LOGITECH_TRAPEZOID       0x81
+
 // Bit-masks for effect states
 #define MEFFECTSTATE_FREE				0x00
 #define MEFFECTSTATE_ALLOCATED	0x01
