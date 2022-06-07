@@ -48,6 +48,10 @@ If analog axis pin is not connected to potentiometer, axis will produce noise. T
 Also, 4 additional axes (AUX1-AUX4) can be disabled in config.h. Just comment out line `#define PIN_AUXN ..`.  
 Disabled axis will be excluded from polling (saving ~45us of computing time) and will always report 50%.
 
+#### If a game does not support DIY wheels
+
+You can try to use controller emulator [GIMX](https://gimx.fr/). You will need an Atmega32U4 board (Leonardo/promicro/teensy2/etc) and CP1202 USB-UART adapter.
+
 #### [Alternate hardware configurations](#althw).
 
 ### Testing software:
@@ -164,6 +168,13 @@ It affects effect only at tiny values of velocity.
 Print/set maximum acceleration value for inertia effect.  
 Increasing this parameter decreases inertia strength, and vice versa.
 
+- `endstop`  
+`endstop <offset> <width>`  
+Print/set endstop effect parameters.  
+![](images/endstop.svg)  
+`<offset>` (0..16383) - level endstop effect will start from. Increasing this parameter makes endstop effect harder.  
+`<width>` - length of excess position where endstop effect will rise to maximum level. Decreasing this parameter makes endstop harder.
+
 - `ffbbd`  
 `ffbbd <value>`  
 Print/set PWM bitdepth for FFB. (sign ignored: bitdepth 8 means 256 steps from 0 to maximum force, thus giving range [-255..0..255])  
@@ -214,6 +225,31 @@ This is significally faster than output to serial port and allows to see graphs 
 
 On Leonardo board pins 14,15,16(MISO, SCK, MOSI - for SPI) are placed on ICSP connector.  
 All connections are same as for ProMicro.
+
+### Motor control.
+
+There are 3 variants of BTS7960 connection:
+
+1) this is shown on main diagram. EN pins of BTS7960 are connected with diodes.
+
+![](images/motor_diodes.png)
+
+Motor is online only in duty part of PWM period, which gives "softer" force feedback.
+
+2) EN pins are controlled by separate wire.
+
+![](images/motor_separatepin.png)
+
+Here motor is online when FFB is active. FFB feels harder and more powerful than in variant #1, but wheel becomes "heavier".  
+This variant requires to uncomment `#define MOTOR_ENABLE_PIN ` and set a pin to use.
+
+3) EN pins are permanently connected to VCC.
+
+![](images/motor_alwaysen.png)
+
+FFB feels like variant #2, but motor is always online, which leads to constant "load" of wheel. On other hand, free pin is not needed.
+
+Hardware (motors, reductors, etc...) and preferences are different for different people, so try all variants and choose what suits you better.
 
 ### Alternate options for steering axis:
 

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW 2018 -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="600px" height="232px" version="1.1" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd"
+viewBox="0 0 60.95 23.58"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+ <g id="Слой_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <line fill="none" stroke="black" stroke-width="0.12" stroke-miterlimit="22.9256" x1="3.51" y1="20.78" x2="59.27" y2= "20.78" />
+  <text x="56.5" y="22.7"  fill="black" font-weight="normal" font-size="1.32px" font-family="Arial">position</text>
+  <text x="-0.01" y="1.76"  fill="black" font-weight="normal" font-size="1.32px" font-family="Arial">force</text>
+  <text x="50.59" y="0.96"  fill="black" font-weight="normal" font-size="1.32px" font-family="Arial">max force</text>
+  <text x="24.83" y="20.35"  fill="black" font-weight="normal" font-size="1.32px" font-family="Arial">range limit</text>
+  <text x="34.46" y="22.89"  fill="black" font-weight="normal" font-size="1.32px" font-family="Arial">&lt;width&gt;</text>
+  <text x="34.82" y="16.67"  fill="black" font-weight="normal" font-size="1.32px" font-family="Arial">&lt;offset&gt;</text>
+  <line fill="none" stroke="black" stroke-width="0.12" stroke-miterlimit="22.9256" x1="59.27" y1="20.78" x2="58.5" y2= "20.99" />
+  <line fill="none" stroke="black" stroke-width="0.12" stroke-miterlimit="22.9256" x1="43.23" y1="23.31" x2="42.47" y2= "23.52" />
+  <line fill="none" stroke="black" stroke-width="0.12" stroke-miterlimit="22.9256" x1="39.5" y1="11.98" x2="39.71" y2= "12.75" />
+  <line fill="none" stroke="black" stroke-width="0.12" stroke-miterlimit="22.9256" x1="31.4" y1="23.31" x2="32.17" y2= "23.52" />
+  <line fill="none" stroke="black" stroke-width="0.12" stroke-miterlimit="22.9256" x1="39.5" y1="20.78" x2="39.71" y2= "20.02" />
+  <line fill="none" stroke="black" stroke-width="0.12" stroke-miterlimit="22.9256" x1="59.27" y1="20.78" x2="58.52" y2= "20.58" />
+  <line fill="none" stroke="black" stroke-width="0.12" stroke-miterlimit="22.9256" x1="43.23" y1="23.31" x2="42.49" y2= "23.11" />
+  <line fill="none" stroke="black" stroke-width="0.12" stroke-miterlimit="22.9256" x1="39.5" y1="11.98" x2="39.3" y2= "12.72" />
+  <line fill="none" stroke="black" stroke-width="0.12" stroke-miterlimit="22.9256" x1="31.4" y1="23.31" x2="32.15" y2= "23.11" />
+  <line fill="none" stroke="black" stroke-width="0.12" stroke-miterlimit="22.9256" x1="39.5" y1="20.78" x2="39.3" y2= "20.04" />
+  <line fill="none" stroke="black" stroke-width="0.25" stroke-miterlimit="22.9256" x1="31.37" y1="19.98" x2="31.37" y2= "21.18" />
+  <line fill="none" stroke="black" stroke-width="0.12" stroke-miterlimit="22.9256" x1="3.51" y1="20.78" x2="3.51" y2= "0.2" />
+  <polyline fill="none" stroke="black" stroke-width="0.12" stroke-miterlimit="22.9256" points="3.28,1.07 3.51,0.24 3.73,1.06 "/>
+  <polyline fill="none" stroke="red" stroke-width="0.37" stroke-miterlimit="22.9256" points="3.51,20.78 31.39,20.78 31.39,11.98 43.2,1.68 55.96,1.68 "/>
+  <line fill="none" stroke="black" stroke-width="0.12" stroke-miterlimit="22.9256" stroke-dasharray="0.250000 0.370000" x1="43.2" y1="1.68" x2="43.2" y2= "20.78" />
+  <line fill="none" stroke="black" stroke-width="0.12" stroke-miterlimit="22.9256" x1="31.4" y1="23.31" x2="43.23" y2= "23.31" />
+  <line fill="none" stroke="black" stroke-width="0.12" stroke-miterlimit="22.9256" x1="39.5" y1="20.78" x2="39.5" y2= "11.98" />
+  <line fill="none" stroke="black" stroke-width="0.12" stroke-miterlimit="22.9256" stroke-dasharray="0.250000 0.370000" x1="31.39" y1="11.98" x2="39.5" y2= "11.98" />
+ </g>
+</svg>
