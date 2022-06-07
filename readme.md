@@ -174,6 +174,7 @@ Print/set endstop effect parameters.
 ![](images/endstop.svg)  
 `<offset>` (0..16383) - level endstop effect will start from. Increasing this parameter makes endstop effect harder.  
 `<width>` - length of excess position where endstop effect will rise to maximum level. Decreasing this parameter makes endstop harder.
+(these settings are not saved to EEPROM yet, require to set them in config.h after tuning)
 
 - `ffbbd`  
 `ffbbd <value>`  
