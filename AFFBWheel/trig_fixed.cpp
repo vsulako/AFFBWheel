@@ -112,7 +112,7 @@ uint16_t atan_fix(uint16_t x)  // x: .15
  * Reduces the argument to the first octant and calculates atan(y/x).
  * The octants are numbered, CCW: 0, 1, 5, 4, 6, 7, 3, 2.
  */
-uint16_t atan2_fix(int16_t y, int16_t x)
+int16_t atan2_fix(int16_t y, int16_t x)
 {
     static const uint8_t axis[8] = {0x00, 0x40, 0x00, 0xc0,
         0x80, 0x40, 0x80, 0xc0};
