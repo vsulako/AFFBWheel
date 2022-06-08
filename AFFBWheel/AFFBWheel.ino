@@ -44,10 +44,6 @@ int16_t force;
 bool timing=false;
 bool fvaOut=false;
 
-int16_t endstop_offset=DEFAULT_ENDSTOP_OFFSET;
-int16_t endstop_width=DEFAULT_ENDSTOP_WIDTH;
-
-
 #ifdef APB
 bool apb_out=false;
 #endif
@@ -295,12 +291,15 @@ void processFFB()
     if (excess)
     {
       int32_t absExcess=abs(excess);
-      if (absExcess<endstop_width)
+      if (absExcess<settings.endstopWidth)
       {
-        force = sign(excess) * (endstop_offset + (absExcess * (16383 - endstop_offset) / endstop_width));
+        force = settings.endstopOffset + (absExcess * (16383 - settings.endstopOffset) / settings.endstopWidth);
       }
       else
-        force = sign(excess)*16383;
+        force = 16383;
+
+      if (excess<0)
+        force = -force;
         
       if (settings.gain[GAIN_ENDSTOP]!=1024)
           force=applyGain(force, settings.gain[GAIN_ENDSTOP]);
@@ -1123,13 +1122,13 @@ void processSerial()
      if (strcmp_P(cmd, PSTR("endstop"))==0)
      {
        if (arg1>=0)
-          endstop_offset=arg1;
+          settings.endstopOffset=arg1;
        if (arg2>=0)
-          endstop_width=arg2;
+          settings.endstopWidth=arg2;
        Serial.print(F("Endstop: offset:"));
-       Serial.print(endstop_offset);
+       Serial.print(settings.endstopOffset);
        Serial.print(F(" width:"));
-       Serial.println(endstop_width);
+       Serial.println(settings.endstopWidth);
      }
 
 #ifdef APB
@@ -1195,6 +1194,9 @@ void load(bool defaults)
     settingsE.maxVelocityDamper=DEFAULT_MAX_VELOCITY;
     settingsE.maxVelocityFriction=DEFAULT_MAX_VELOCITY;
     settingsE.maxAcceleration=DEFAULT_MAX_ACCELERATION;
+
+    settingsE.data.endstopOffset=DEFAULT_ENDSTOP_OFFSET;
+    settingsE.data.endstopWidth=DEFAULT_ENDSTOP_WIDTH;
   }
   
   settingsE.print();

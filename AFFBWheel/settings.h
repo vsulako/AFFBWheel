@@ -20,6 +20,9 @@ struct SettingsData
     int16_t minForce;
     int16_t maxForce;
     int16_t cutForce;
+
+    int16_t endstopOffset;
+    int16_t endstopWidth;    
 };    
 
 //all settings
