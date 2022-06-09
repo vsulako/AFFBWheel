@@ -26,6 +26,13 @@ void Wheel_::update(void)
 
   data.axes[0]=axisWheel->value;
 
+  int8_t i;
+  for(i=0;i<7;i++)
+  {
+    if (!analogAxes[i]->outputDisabled)
+      data.axes[i+1]=analogAxes[i]->value;
+  }
+  /*
   data.axes[1]=analogAxes[AXIS_ACC]->value;
   data.axes[2]=analogAxes[AXIS_BRAKE]->value;
   data.axes[3]=analogAxes[AXIS_CLUTCH]->value;
@@ -34,7 +41,7 @@ void Wheel_::update(void)
   data.axes[5]=analogAxes[AXIS_AUX2]->value;
   data.axes[6]=analogAxes[AXIS_AUX3]->value;
   data.axes[7]=analogAxes[AXIS_AUX4]->value;
-
+*/
 #ifdef HATSWITCH
   data.hat=getHatSwitch();
 #endif

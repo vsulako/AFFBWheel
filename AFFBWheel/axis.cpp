@@ -57,7 +57,7 @@ Axis::Axis(uint8_t smoothLevel)
 void Axis::setValue(int16_t rawValue_)
 {
   rawValue=rawValue_;
-  
+
   if (autoLimit)
   {
       if (rawValue<axisMin)
@@ -65,8 +65,17 @@ void Axis::setValue(int16_t rawValue_)
       if (rawValue>axisMax)
          setLimits(axisMin, rawValue, true);
   }
+
   value=constrain(rawValue, axisMin, axisMax);
   value=filter->setValue(value);
+
+  if (bitTrim)
+  {
+     if (value>=0)
+        value=value>>bitTrim<<bitTrim;
+     else
+        value=-(-value>>bitTrim<<bitTrim);
+  }
 
   if (value<axisCenterN)
     value= (value - axisCenterN ) * rangeFactorNeg;

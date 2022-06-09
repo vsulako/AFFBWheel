@@ -7,6 +7,8 @@ struct SettingsAxis{
   int16_t axisMax;
   int16_t axisCenter;
   int16_t axisDZ;
+  int8_t  axisOutputDisabled;
+  int8_t  axisBitTrim;
 };
 
 //settings in global variables

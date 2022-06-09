@@ -16,7 +16,7 @@
 //Input Report 
 typedef struct
 {
-  int16_t axes[8];
+  int16_t axes[8]={-32768,-32768,-32768,-32768,-32768,-32768,-32768,-32768};
   uint32_t buttons;
 #ifdef HATSWITCH
   uint8_t hat;
@@ -55,6 +55,8 @@ typedef struct
   int16_t deadzone;
   uint8_t autoLimit;
   uint8_t hasCenter;
+  uint8_t outputDisabled;
+  uint8_t bitTrim;
 } GUI_Report_AnalogAxis;
 typedef struct
 {
@@ -74,6 +76,9 @@ typedef struct
   uint16_t cutForce;
 
   uint8_t ffbBD;
+
+  uint16_t endstopOffset;
+  uint16_t endstopWidth;
 } GUI_Report_Settings;
 
 

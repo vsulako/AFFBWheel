@@ -51,6 +51,10 @@ class Axis
     int16_t axisMax;
     int16_t axisCenterN;
     int16_t axisCenterP;
+    
+    bool outputDisabled=false;
+    int8_t bitTrim=0;
+    
     Axis(uint8_t smoothLevel);
     void setValue(int16_t rawValue_);
     void setCenter(int16_t center);

@@ -32,7 +32,7 @@ SOFTWARE.
 #include "motor.h"
 #include "settings.h"
 
-#define AFFB_VER "1.0.1"
+#define AFFB_VER "1.0.2"
 
 //global variables
 Wheel_ wheel;
@@ -382,6 +382,9 @@ void processUsbCmd()
               ((GUI_Report_AnalogAxis*)data)->deadzone=wheel.analogAxes[usbCmd->arg[0]]->getDZ();
               ((GUI_Report_AnalogAxis*)data)->autoLimit=wheel.analogAxes[usbCmd->arg[0]]->autoLimit;
               ((GUI_Report_AnalogAxis*)data)->hasCenter=!wheel.analogAxes[usbCmd->arg[0]]->autoCenter;
+              
+              ((GUI_Report_AnalogAxis*)data)->outputDisabled=wheel.analogAxes[usbCmd->arg[0]]->outputDisabled;
+              ((GUI_Report_AnalogAxis*)data)->bitTrim=wheel.analogAxes[usbCmd->arg[0]]->bitTrim;
             break;
           case 4: //return buttons data
               ((GUI_Report_Buttons*)data)->buttons=wheel.buttons;
@@ -403,6 +406,9 @@ void processUsbCmd()
               ((GUI_Report_Settings*)data)->cutForce=settings.cutForce;
 
               ((GUI_Report_Settings*)data)->ffbBD=motor.bitDepth;
+
+              ((GUI_Report_Settings*)data)->endstopOffset=settings.endstopOffset;
+              ((GUI_Report_Settings*)data)->endstopWidth=settings.endstopWidth;
             break;
             
 
@@ -458,8 +464,16 @@ void processUsbCmd()
                   case 6:
                      motor.setBitDepth(usbCmd->arg[1]);
                      break;
+                  case 7:
+                     settings.endstopOffset=usbCmd->arg[1];
+                     settings.endstopWidth=usbCmd->arg[2];
+                     break;
               }
             break;
+          case 19://set outputDisabled and bittrim for analog axis
+              wheel.analogAxes[usbCmd->arg[0]]->outputDisabled=(usbCmd->arg[1]>0);
+              wheel.analogAxes[usbCmd->arg[0]]->bitTrim=usbCmd->arg[2];
+            break;  
 
           //commands
           case 20: //load settings from EEPROM
@@ -1083,6 +1097,33 @@ void processSerial()
         Serial.print(F(" Deadzone:"));
         Serial.println(wheel.analogAxes[arg1-1]->getDZ());
      }     
+
+      //axisdisable <axis> <pos>
+     if (strcmp_P(cmd, PSTR("axisdisable"))==0)
+     if ((arg1>=1) && (arg1<=7))
+     {
+        wheel.analogAxes[arg1-1]->outputDisabled=!wheel.analogAxes[arg1-1]->outputDisabled;
+        
+        Serial.print(F("Axis#"));
+        Serial.print(arg1);
+        if (wheel.analogAxes[arg1-1]->outputDisabled)
+          Serial.println(F(" disabled"));
+        else
+          Serial.println(F(" enabled"));
+     }    
+     
+     //axistrim <axis> <level>
+     if (strcmp_P(cmd, PSTR("axistrim"))==0)
+     if ((arg1>=1) && (arg1<=7))
+     {
+        if ((arg2>=0) && (arg2<8))
+          wheel.analogAxes[arg1-1]->bitTrim=arg2;
+        
+        Serial.print(F("Axis#"));
+        Serial.print(arg1);
+        Serial.print(F(" trim:"));
+        Serial.println(wheel.analogAxes[arg1-1]->bitTrim);
+     }   
      
      //autolimits <axis>
      if (strcmp_P(cmd, PSTR("autolimit"))==0)
@@ -1184,6 +1225,9 @@ void load(bool defaults)
       }
       settingsE.axes[i].axisCenter=-32768; //no center
       settingsE.axes[i].axisDZ=0;
+
+      settingsE.axes[i].axisOutputDisabled=0;
+      settingsE.axes[i].axisBitTrim=0;
     }
     settingsE.data.debounce=0;
     settingsE.data.minForce=0;
@@ -1209,6 +1253,9 @@ void load(bool defaults)
     wheel.analogAxes[i]->setCenter(settingsE.axes[i].axisCenter);
     if (!wheel.analogAxes[i]->autoCenter)
        wheel.analogAxes[i]->setDZ(settingsE.axes[i].axisDZ);
+
+    wheel.analogAxes[i]->bitTrim=settingsE.axes[i].axisBitTrim;
+    wheel.analogAxes[i]->outputDisabled=settingsE.axes[i].axisOutputDisabled;
   }
     
   wheel.axisWheel->setRange(settingsE.range);
@@ -1239,6 +1286,9 @@ void save()
       else
         settingsE.axes[i].axisCenter = -32768;
       settingsE.axes[i].axisDZ = wheel.analogAxes[i]->getDZ();
+
+      settingsE.axes[i].axisBitTrim=wheel.analogAxes[i]->bitTrim;
+      settingsE.axes[i].axisOutputDisabled=wheel.analogAxes[i]->outputDisabled;
     }
 
     settingsE.maxVelocityDamper=round(16384.0/wheel.ffbEngine.maxVelocityDamperC);
