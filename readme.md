@@ -44,9 +44,9 @@ Set encoder PPR in config.h, in line `#define ENCODER_PPR 400`.
 
 #### Blocking unneeded analog axes.
 
-If analog axis pin is not connected to potentiometer, axis will produce noise. To avoid that, either pull axis pin to GND with 1-10kOhm resistor, or set mimimum/maximum limits for axis to same value. So, axis will always report same value and will not mess up when detecting axes in games.  
+If analog axis pin is not connected to potentiometer, axis will produce noise. To avoid that, either pull axis pin to GND with 1-10kOhm resistor, or disable axis output with command `axisdisable`. So, axis will always report same value and will not mess up when detecting axes in games.  
 Also, 4 additional axes (AUX1-AUX4) can be disabled in config.h. Just comment out line `#define PIN_AUXN ..`.  
-Disabled axis will be excluded from polling (saving ~45us of computing time) and will always report 50%.
+Disabled axis will be excluded from polling (saving ~45us of computing time) and will always report 0%.
 
 #### If a game does not support DIY wheels
 
@@ -114,6 +114,16 @@ If axis has center set with `axiscenter` command, a deadzone for center position
 Units are raw. (e.g., if axis has center=500, and dz=10, axis will return 0 when raw position is between 490 and 510).  
 If you need deadzones at edges, just set axis limits less than actual limits.  
 Deadzone does not apply if axis have no center set (autocenter=1).
+
+- `axisdisable <axis>
+Enable/disable axis output.  
+Axis with disabled output will report permanent minimum value (0%).
+
+- `axistrim <axis>`  
+`axistrim <axis> <trimlevel>`  
+Print/set bit trimming value for analog axis.  
+This reduces resolution of raw axis reading for lowering noise. E.g. if `<trimlevel>` is 3, axis value will change with steps of 8 (2 in power of 3).
+If axis has noise, you can try to raise this value (however, it's better to find cause of noise, instead of hiding it with this)
 
 - `autolimit <axis>`  
 Enables/disables autosetting min/max values for analog axis [1..5].  
@@ -483,7 +493,7 @@ If 8-position is used, first button is 25, shifter will use buttons #25,26,27,28
 
 Any 4 buttons can be defined for using as 8-position hat switch.
 
-Configuration в config.h:
+Configuration in config.h:
 
 ```
 #define HATSWITCH           //uncomment to enable feature
