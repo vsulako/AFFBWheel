@@ -115,7 +115,7 @@ Units are raw. (e.g., if axis has center=500, and dz=10, axis will return 0 when
 If you need deadzones at edges, just set axis limits less than actual limits.  
 Deadzone does not apply if axis have no center set (autocenter=1).
 
-- `axisdisable <axis>
+- `axisdisable <axis>`  
 Enable/disable axis output.  
 Axis with disabled output will report permanent minimum value (0%).
 
