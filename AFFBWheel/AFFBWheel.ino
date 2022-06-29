@@ -725,29 +725,34 @@ void readButtons()
 
   #ifdef HC165_PIN_PL
     digitalWriteFast(HC165_PIN_PL,1);  
+  #else
+    digitalWriteFast(HC165_PIN_SCK, 1);
+    digitalWriteFast(HC165_PIN_SCK, 0);  
   #endif  
    
   i=0x80;
   do
   {  
-      digitalWriteFast(HC165_PIN_SCK, 1);
-      digitalWriteFast(HC165_PIN_SCK, 0);  
-           
       if (!digitalReadFast(HC165_PIN_DATA1))
          d[0]|=i; 
       if (!digitalReadFast(HC165_PIN_DATA2))
          d[2]|=i; 
+
+      digitalWriteFast(HC165_PIN_SCK, 1);
+      digitalWriteFast(HC165_PIN_SCK, 0);  
+      
   } while(i>>=1);
   i=0x80;
   do
   {   
-      digitalWriteFast(HC165_PIN_SCK, 1);
-      digitalWriteFast(HC165_PIN_SCK, 0);
-      
       if (!digitalReadFast(HC165_PIN_DATA1))
          d[1]|=i; 
       if (!digitalReadFast(HC165_PIN_DATA2))
          d[3]|=i; 
+      
+      digitalWriteFast(HC165_PIN_SCK, 1);
+      digitalWriteFast(HC165_PIN_SCK, 0);
+               
   } while(i>>=1);
 
   #ifdef HC165_PIN_PL
