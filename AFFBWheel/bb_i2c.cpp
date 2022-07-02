@@ -1,9 +1,9 @@
 #include "bb_i2c.h"
 
-#define I2C_SDA_LOW   {pinModeFast(I2C_PIN_SDA, OUTPUT);}
-#define I2C_SDA_HIGH  {pinModeFast(I2C_PIN_SDA, INPUT);}
-#define I2C_SCL_LOW   {pinModeFast(I2C_PIN_SCL, OUTPUT);}
-#define I2C_SCL_HIGH  {pinModeFast(I2C_PIN_SCL, INPUT);}
+#define I2C_SDA_LOW   {pinModeFast(I2C_PIN_SDA, OUTPUT);__builtin_avr_delay_cycles(1);}
+#define I2C_SDA_HIGH  {pinModeFast(I2C_PIN_SDA, INPUT);__builtin_avr_delay_cycles(1);}
+#define I2C_SCL_LOW   {pinModeFast(I2C_PIN_SCL, OUTPUT);__builtin_avr_delay_cycles(1);}
+#define I2C_SCL_HIGH  {pinModeFast(I2C_PIN_SCL, INPUT);__builtin_avr_delay_cycles(1);}
 
 #define I2C_IS_SDA_HIGH (digitalReadFast(I2C_PIN_SDA))
 
