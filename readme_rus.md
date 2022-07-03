@@ -25,26 +25,26 @@
 
 ## Как загрузить прошивку
 
-1. Скачайте проект с github:
-![](images//github_download.png)
+1. Скачайте проект с github: <br>
+![](images//github_download.png) <br>
 И распакуйте архив в любую удобную папку.
-2. Скачайте [Arduino IDE](https://www.arduino.cc/en/software).
-3. Загрузите дополнительные библиотеки:
+1. Скачайте [Arduino IDE](https://www.arduino.cc/en/software).
+2. Загрузите дополнительные библиотеки:
    - [digitalWriteFast](https://github.com/NicksonYap/digitalWriteFast)
    - [avdweb_AnalogReadFast](https://github.com/avandalen/avdweb_AnalogReadFast)
    - [Encoder](https://github.com/PaulStoffregen/Encoder)
-4. Установите скачанные библиотеки:
+3. Установите скачанные библиотеки:
    1. Загрузите библиотеку в виде *zip*.
-   2. Откройте *Arduino IDE*, далее нажмите **Скетч > Подключить библиотеку > Добавить .ZIP библиотеку....** и выберите *zip* со скачанной библиотекой. [Инструкция на английском](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries):
+   2. Откройте *Arduino IDE*, далее нажмите **Скетч > Подключить библиотеку > Добавить .ZIP библиотеку....** и выберите *zip* со скачанной библиотекой. [Инструкция на английском](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries): <br>
    ![](images//install_arduino_lib_ru.png)
-5. Откройте папку куда вы распаковали архив проекта проекта, перейдите в папку **[AFFBWheel](AFFBWheel/)** и откройте файл **[AFFBWheel.ino](AFFBWheel/AFFBWheel.ino)** в *Arduino IDE*.
-6. Внесите нужные изменения в файл **[config.h](AFFBWheel/config.h)** для настройки.
-7. Подключите плату *Arduino* к вашему ПК. 
-8. Выберите свой тип платы *Arduino* **Инструменты > Плата** (Leonardo, ProMicro, Micro, и др.):
+4. Откройте папку куда вы распаковали архив проекта проекта, перейдите в папку **[AFFBWheel](AFFBWheel/)** и откройте файл **[AFFBWheel.ino](AFFBWheel/AFFBWheel.ino)** в *Arduino IDE*.
+5. Внесите нужные изменения в файл **[config.h](AFFBWheel/config.h)** для настройки.
+6. Подключите плату *Arduino* к вашему ПК. 
+7. Выберите свой тип платы *Arduino* **Инструменты > Плата** (Leonardo, ProMicro, Micro, и др.): <br>
 ![](images/select_board_type_ru.png)
-9. Выберите порт на котором определяется *Arduino* **Инструменты >  Порт**:
+9. Выберите порт на котором определяется *Arduino* **Инструменты >  Порт**: <br>
 ![](images/select_arduino_port_ru.png)
-10. Нажмите кнопку загрузки:
+10. Нажмите кнопку загрузки: <br>
 ![](images/firmware_arduino_ru.png)
 11. Дождитесь окончания процесса прошивки. Все готово!
 
