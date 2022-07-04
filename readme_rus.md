@@ -23,6 +23,31 @@
 - источник питания для двигателя
 - опционально: АЦП MCP3204, ADS1015, или аналоговый мультиплексор 74HC4051/74HC4052/74HC4067 + сдвиговый регистр 74HC164
 
+## Инструкция по прошивке
+
+1. Скачайте проект с github в виде *zip*: <br>
+![](images//github_download.png) <br>
+И распакуйте архив в любую удобную папку.
+2. Скачайте [Arduino IDE](https://www.arduino.cc/en/software).
+3. Загрузите дополнительные библиотеки:
+   - [digitalWriteFast](https://github.com/NicksonYap/digitalWriteFast)
+   - [avdweb_AnalogReadFast](https://github.com/avandalen/avdweb_AnalogReadFast)
+   - [Encoder](https://github.com/PaulStoffregen/Encoder)
+4. Установите скачанные библиотеки:
+   - 4.1. Загрузите библиотеку в виде *zip*.
+   - 4.2. Откройте *Arduino IDE*, далее нажмите **Скетч > Подключить библиотеку > Добавить .ZIP библиотеку....** и выберите *zip* со скачанной библиотекой. [Инструкция на английском](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries): <br>
+   ![](images//install_arduino_lib_ru.png)
+5. Откройте папку куда вы распаковали архив проекта, перейдите в папку **[AFFBWheel](AFFBWheel/)** и откройте файл **[AFFBWheel.ino](AFFBWheel/AFFBWheel.ino)** в *Arduino IDE*.
+6. Внесите нужные изменения в файл **[config.h](AFFBWheel/config.h)** для настройки.
+7. Подключите плату *Arduino* к вашему ПК.
+8. Выберите свой тип платы *Arduino* **Инструменты > Плата** (Leonardo, ProMicro, Micro, и др.): <br>
+![](images/select_board_type_ru.png)
+9. Выберите порт на котором определяется *Arduino* **Инструменты >  Порт**: <br>
+![](images/select_arduino_port_ru.png)
+10. Нажмите кнопку загрузки: <br>
+![](images/firmware_arduino_ru.png)
+11. Дождитесь окончания процесса прошивки. Все готово!
+
 ### Схема подключений:
 
 ![](images/base_encoder.png)
@@ -286,6 +311,10 @@ TLE5010 это цифровой датчик поворота магнита. М
 
 - раскомментируйте `#define STEER_TYPE ST_TLE5010`
 - закомментируйте остальные строки со `STEER_TYPE`
+
+Подключите библиотеки:
+
+- [TLE5010](https://github.com/vsulako/TLE5010)
 
 #### AS5600
 

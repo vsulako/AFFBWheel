@@ -26,6 +26,31 @@ However, modern games typically use only constant force to emulate other effects
 
 Project uses USB HID communication code from [VNWheel](https://github.com/hoantv/VNWheel) project (great thanks to hoantv&apos;s work).
 
+## Instructions for the firmware
+
+1. Download the project from github as *zip*: <br>
+![](images//github_download.png) <br>
+And unzip the archive to any convenient folder.
+2. Download [Arduino IDE](https://www.arduino.cc/en/software).
+3. Download additional libraries:
+   - [digitalWriteFast](https://github.com/NicksonYap/digitalWriteFast)
+   - [avdweb_AnalogReadFast](https://github.com/avandalen/avdweb_AnalogReadFast)
+   - [Encoder](https://github.com/PaulStoffregen/Encoder)
+4. Install the downloaded libraries:
+   - 4.1. Download the library as *zip*.
+   - 4.2. Open *Arduino IDE*, then click **Sketch > Include Library > Add .ZIP Library....** and select *zip* with downloaded library. [Instruction in English](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries): <br>
+   ![](images//install_arduino_lib_en.png)
+5. Open the folder where you unpacked the project archive, go to the **[AFFBWheel](AFFBWheel/)** folder and open the **[AFFBWheel.ino](AFFBWheel/AFFBWheel.ino)** file in *Arduino IDE*.
+6. Make the necessary changes to the **[config.h](AFFBWheel/config.h)** file for customization.
+7. Connect the *Arduino* board to your PC.
+8. Select your board type *Arduino* **Tools > Board** (Leonardo, ProMicro, Micro, etc.): <br>
+![](images/select_board_type_en.png)
+9. Select the port on which *Arduino* is detected**Tools > Port**: <br>
+![](images/select_arduino_port_en.png)
+10. Click the upload button: <br>
+![](images/firmware_arduino_en.png)
+11. Wait for the firmware process to finish. All is ready!
+
 ### Wiring diagram:
 ![](images/base_encoder.png)
 
@@ -281,8 +306,13 @@ Magnet is placed at top center of steering axis, TLE5010 is placed against it, a
 Magnet pole separating line must be faced to TLE5010.
 
 Changes in config.h:
+
 - uncomment `#define STEER_TYPE ST_TLE5010`
-- comment `#define STEER_TYPE ST_ENCODER` 
+- comment `#define STEER_TYPE ST_ENCODER`
+
+Include libraries:
+
+- [TLE5010](https://github.com/vsulako/TLE5010)
 
 #### AS5600
 
