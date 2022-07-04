@@ -306,8 +306,13 @@ Magnet is placed at top center of steering axis, TLE5010 is placed against it, a
 Magnet pole separating line must be faced to TLE5010.
 
 Changes in config.h:
+
 - uncomment `#define STEER_TYPE ST_TLE5010`
-- comment `#define STEER_TYPE ST_ENCODER` 
+- comment `#define STEER_TYPE ST_ENCODER`
+
+Include libraries:
+
+- [TLE5010](https://github.com/vsulako/TLE5010)
 
 #### AS5600
 
