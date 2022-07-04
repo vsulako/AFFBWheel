@@ -40,7 +40,7 @@ And unzip the archive to any convenient folder.
    - 4.1. Download the library as *zip*.
    - 4.2. Open *Arduino IDE*, then click **Sketch > Include Library > Add .ZIP Library....** and select *zip* with downloaded library. [Instruction in English](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries): <br>
    ![](images//install_arduino_lib_en.png)
-5. Open the folder where you unpacked the project project archive, go to the **[AFFBWheel](AFFBWheel/)** folder and open the **[AFFBWheel.ino](AFFBWheel/AFFBWheel.ino)** file in *Arduino IDE*.
+5. Open the folder where you unpacked the project archive, go to the **[AFFBWheel](AFFBWheel/)** folder and open the **[AFFBWheel.ino](AFFBWheel/AFFBWheel.ino)** file in *Arduino IDE*.
 6. Make the necessary changes to the **[config.h](AFFBWheel/config.h)** file for customization.
 7. Connect the *Arduino* board to your PC.
 8. Select your board type *Arduino* **Tools > Board** (Leonardo, ProMicro, Micro, etc.): <br>

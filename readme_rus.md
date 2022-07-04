@@ -37,9 +37,9 @@
    - 4.1. Загрузите библиотеку в виде *zip*.
    - 4.2. Откройте *Arduino IDE*, далее нажмите **Скетч > Подключить библиотеку > Добавить .ZIP библиотеку....** и выберите *zip* со скачанной библиотекой. [Инструкция на английском](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries): <br>
    ![](images//install_arduino_lib_ru.png)
-5. Откройте папку куда вы распаковали архив проекта проекта, перейдите в папку **[AFFBWheel](AFFBWheel/)** и откройте файл **[AFFBWheel.ino](AFFBWheel/AFFBWheel.ino)** в *Arduino IDE*.
+5. Откройте папку куда вы распаковали архив проекта, перейдите в папку **[AFFBWheel](AFFBWheel/)** и откройте файл **[AFFBWheel.ino](AFFBWheel/AFFBWheel.ino)** в *Arduino IDE*.
 6. Внесите нужные изменения в файл **[config.h](AFFBWheel/config.h)** для настройки.
-7. Подключите плату *Arduino* к вашему ПК. 
+7. Подключите плату *Arduino* к вашему ПК.
 8. Выберите свой тип платы *Arduino* **Инструменты > Плата** (Leonardo, ProMicro, Micro, и др.): <br>
 ![](images/select_board_type_ru.png)
 9. Выберите порт на котором определяется *Arduino* **Инструменты >  Порт**: <br>
