@@ -45,7 +45,7 @@ And unzip the archive to any convenient folder.
 7. Connect the *Arduino* board to your PC.
 8. Select your board type *Arduino* **Tools > Board** (Leonardo, ProMicro, Micro, etc.): <br>
 ![](images/select_board_type_en.png)
-9. Select the port on which *Arduino* is detected**Tools > Port**: <br>
+9. Select the port on which *Arduino* is detected **Tools > Port**: <br>
 ![](images/select_arduino_port_en.png)
 10. Click the upload button: <br>
 ![](images/firmware_arduino_en.png)
