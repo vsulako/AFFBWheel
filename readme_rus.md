@@ -26,7 +26,7 @@
 ## Инструкция по прошивке
 
 1. Скачайте проект с github в виде *zip*: <br>
-![](images//github_download.png) <br>
+![](images/firmware-instructions/github_download.png) <br>
 И распакуйте архив в любую удобную папку.
 2. Скачайте [Arduino IDE](https://www.arduino.cc/en/software).
 3. Загрузите дополнительные библиотеки:
@@ -36,21 +36,26 @@
 4. Установите скачанные библиотеки:
    - 4.1. Загрузите библиотеку в виде *zip*.
    - 4.2. Откройте *Arduino IDE*, далее нажмите **Скетч > Подключить библиотеку > Добавить .ZIP библиотеку....** и выберите *zip* со скачанной библиотекой. [Инструкция на английском](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries): <br>
-   ![](images//install_arduino_lib_ru.png)
+   ![](images/firmware-instructions/install_arduino_lib_ru.png)
 5. Откройте папку куда вы распаковали архив проекта, перейдите в папку **[AFFBWheel](AFFBWheel/)** и откройте файл **[AFFBWheel.ino](AFFBWheel/AFFBWheel.ino)** в *Arduino IDE*.
 6. Внесите нужные изменения в файл **[config.h](AFFBWheel/config.h)** для настройки.
 7. Подключите плату *Arduino* к вашему ПК.
 8. Выберите свой тип платы *Arduino* **Инструменты > Плата** (Leonardo, ProMicro, Micro, и др.): <br>
-![](images/select_board_type_ru.png)
+![](images/firmware-instructions/select_board_type_ru.png)
 9. Выберите порт на котором определяется *Arduino* **Инструменты >  Порт**: <br>
-![](images/select_arduino_port_ru.png)
+![](images/firmware-instructions/select_arduino_port_ru.png)
 10. Нажмите кнопку загрузки: <br>
-![](images/firmware_arduino_ru.png)
+![](images/firmware-instructions/firmware_arduino_ru.png)
 11. Дождитесь окончания процесса прошивки. Все готово!
 
 ### Схема подключений:
 
 ![](images/base_encoder.png)
+
+*Схема подключения показана на примере **Arduino Pro Micro**, для остальных плат распиновка точно такая же по тем же номерам.
+Есть небольшие отличия для **[Arduino Leonardo](#arduino-leonardo-вместо-promicro)** в расположении контактов на плате.*
+
+*Так же существует несколько вариантов **[подключения драйвера мотора](#управление-двигателем)**.*
 
 Для удобства подключений кнопки разделены на две линии по 16 кнопок.  
 Таким образом, можно, например, поместить 16 штук на руль, и еще 16 - на коробку передач или базу.

@@ -29,7 +29,7 @@ Project uses USB HID communication code from [VNWheel](https://github.com/hoantv
 ## Instructions for the firmware
 
 1. Download the project from github as *zip*: <br>
-![](images//github_download.png) <br>
+![](images/firmware-instructions/github_download.png) <br>
 And unzip the archive to any convenient folder.
 2. Download [Arduino IDE](https://www.arduino.cc/en/software).
 3. Download additional libraries:
@@ -39,20 +39,26 @@ And unzip the archive to any convenient folder.
 4. Install the downloaded libraries:
    - 4.1. Download the library as *zip*.
    - 4.2. Open *Arduino IDE*, then click **Sketch > Include Library > Add .ZIP Library....** and select *zip* with downloaded library. [Instruction in English](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries): <br>
-   ![](images//install_arduino_lib_en.png)
+   ![](images/firmware-instructions/install_arduino_lib_en.png)
 5. Open the folder where you unpacked the project archive, go to the **[AFFBWheel](AFFBWheel/)** folder and open the **[AFFBWheel.ino](AFFBWheel/AFFBWheel.ino)** file in *Arduino IDE*.
 6. Make the necessary changes to the **[config.h](AFFBWheel/config.h)** file for customization.
 7. Connect the *Arduino* board to your PC.
 8. Select your board type *Arduino* **Tools > Board** (Leonardo, ProMicro, Micro, etc.): <br>
-![](images/select_board_type_en.png)
-9. Select the port on which *Arduino* is detected**Tools > Port**: <br>
-![](images/select_arduino_port_en.png)
+![](images/firmware-instructions/select_board_type_en.png)
+9. Select the port on which *Arduino* is detected **Tools > Port**: <br>
+![](images/firmware-instructions/select_arduino_port_en.png)
 10. Click the upload button: <br>
-![](images/firmware_arduino_en.png)
+![](images/firmware-instructions/firmware_arduino_en.png)
 11. Wait for the firmware process to finish. All is ready!
 
 ### Wiring diagram:
+
 ![](images/base_encoder.png)
+
+*The connection diagram is shown on the example of **Arduino Pro Micro**, for the rest of the boards, the pinout is exactly the same with the same numbers.
+There are slight differences for **[Arduino Leonardo](#leonardo-instead-of-promicro)** in the location of pins on the board.*
+
+*There are also several options **[motor driver connection](#motor-control)**.*
 
 There are two separate lines of shift registers, 16 buttons each.  
 Thus, 16 buttons can be placed on wheel, and 16 more on wheelbase or gearbox.
