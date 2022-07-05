@@ -55,8 +55,10 @@ And unzip the archive to any convenient folder.
 
 ![](images/base_encoder.png)
 
-The connection diagram is shown on the example of *Arduino Pro Micro*, for the rest of the boards, the pinout is exactly the same with the same numbers.
-There are slight differences for *[Arduino Leonardo](#leonardo-instead-of-promicro)* in the location of pins on the board.
+*The connection diagram is shown on the example of **Arduino Pro Micro**, for the rest of the boards, the pinout is exactly the same with the same numbers.
+There are slight differences for **[Arduino Leonardo](#leonardo-instead-of-promicro)** in the location of pins on the board.*
+
+*There are also several options **[motor driver connection](#motor-control)**.*
 
 There are two separate lines of shift registers, 16 buttons each.  
 Thus, 16 buttons can be placed on wheel, and 16 more on wheelbase or gearbox.
