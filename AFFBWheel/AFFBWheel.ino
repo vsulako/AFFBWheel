@@ -203,7 +203,16 @@ void setup() {
       pinMode(HC165_PIN_PL, OUTPUT);
     #endif
   #endif
-
+  
+  #if (BUTTONS_TYPE == BT_CD4021B)
+    pinMode(CD4021_PIN_DATA1, INPUT_PULLUP);
+    pinMode(CD4021_PIN_DATA2, INPUT_PULLUP);
+    pinMode(CD4021_PIN_SCK, OUTPUT);
+    #ifdef CD4021_PIN_PL
+      pinMode(CD4021_PIN_PL, OUTPUT);
+    #endif
+  #endif
+  
   #if (BUTTONS_TYPE == BT_MCP23017)
     mcp23017_1.begin(MCP23017_ADDR1);
     mcp23017_2.begin(MCP23017_ADDR2);
@@ -761,6 +770,50 @@ void readButtons()
 
 
 #endif
+
+
+#if BUTTONS_TYPE == BT_CD4021B
+
+  digitalWriteFast(CD4021_PIN_SCK, 1);
+  digitalWriteFast(CD4021_PIN_SCK, 0);  
+  
+  //защелка работает наоборот
+  #ifdef CD4021_PIN_PL
+  digitalWriteFast(CD4021_PIN_PL,0);
+  #endif
+  
+  i=0x80;
+  do
+  {  
+
+      
+      if (!digitalReadFast(CD4021_PIN_DATA1))
+         d[0]|=i; 
+      if (!digitalReadFast(CD4021_PIN_DATA2))
+         d[2]|=i; 
+      digitalWriteFast(CD4021_PIN_SCK, 1);
+      digitalWriteFast(CD4021_PIN_SCK, 0);    
+     
+      
+  } while(i>>=1);
+  i=0x80;
+  do
+  {   
+      if (!digitalReadFast(CD4021_PIN_DATA1))
+         d[1]|=i; 
+      if (!digitalReadFast(CD4021_PIN_DATA2))
+         d[3]|=i; 
+      
+      digitalWriteFast(CD4021_PIN_SCK, 1);
+      digitalWriteFast(CD4021_PIN_SCK, 0);    
+  } while(i>>=1);
+
+  #ifdef CD4021_PIN_PL
+    digitalWriteFast(CD4021_PIN_PL,1);  
+  #endif
+#endif
+
+
 
 #if BUTTONS_TYPE == BT_MCP23017
   mcp23017_1.read16((uint16_t *)d);

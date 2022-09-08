@@ -12,6 +12,7 @@
 
 #define BT_74HC165      0
 #define BT_MCP23017     1
+#define BT_CD4021B      2
 //-----------------------------------------------------------------------
 
 //---------------------------Configuration-------------------------------
@@ -124,12 +125,19 @@
 //different ways of connecting buttons. Choose only one!
 #define BUTTONS_TYPE BT_74HC165       //Use 74HC165 shift registers
 //#define BUTTONS_TYPE BT_MCP23017    //Use MCP23017 I2C port expanders
+//#define BUTTONS_TYPE BT_CD4021B     //Use CD4021B shift registers
 
 //settings for 74HC165
 #define HC165_PIN_SCK     15
 #define HC165_PIN_DATA1   2          //pin for DATA#1
 #define HC165_PIN_DATA2   7          //pin for DATA#2
 #define HC165_PIN_PL      3          //pin for PL (comment this line if using RC to omit PL line)
+
+//settings for CD4021
+#define CD4021_PIN_SCK     15
+#define CD4021_PIN_DATA1   2          //pin for DATA#1
+#define CD4021_PIN_DATA2   7          //pin for DATA#2
+#define CD4021_PIN_PL      3          //pin for PL (comment this line if using RC to omit PL line)
 
 //settings for MCP23017
 #define MCP23017_ADDR1  0x20

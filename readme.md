@@ -69,6 +69,7 @@ Thus, 16 buttons can be placed on wheel, and 16 more on wheelbase or gearbox.
 
 For lowering noise it is recommended to add decoupling capacitors (ceramic 100nf...1uf between VCC and GND) to all bare IC&apos;s (TLE5010, 74HC165, 74HC4052, MCP2304...) close as possible to IC. Modules already have these.
 
+
 #### Encoder PPR
 
 Set encoder PPR in config.h, in line `#define ENCODER_PPR 400`.
@@ -260,6 +261,10 @@ This is significally faster than output to serial port and allows to see graphs 
 <a name="althw"></a>
 ## Alternate hardware configurations.
 
+### Misc:
+
+- Diodes 1n5817 shown on diagrams can be replaced with any other diodes: 1n4148, 1n5819 and so on.
+
 ### Leonardo instead of ProMicro:
 
 ![](images/leonardo_pins.png)
@@ -443,7 +448,7 @@ Wiring diagram:
 
 Changes in config.h:
 - make sure that line `#define BUTTONS_TYPE BT_74HC165` is uncommented and other line with `BUTTONS_TYPE` is commented.
-- comment line `#define PIN_BPL`
+- comment line `#define HC165_PIN_PL`
 
 #### Option #2: I2C extenders MCP23017
 
@@ -458,6 +463,22 @@ Changes in config.h:
 	#define I2C_PIN_SCL 7
 	```
 In case of using another I2C devices (AS5600,AD1015) - connect in parallel to same pins.
+
+#### Option #3: Shift registers CD4021B
+
+CD4014B seems to be compatible (not tested in hardware, because I don't have any).
+
+Connections are similar to 74HC165, but chip pinout is different:
+
+![Wiring diagram](images/buttons_CD4021B.png)
+
+Getting rid of PL line for 4-wire connections is also possible:
+
+![Wiring diagram](images/buttons_CD4021B_4wire.png)
+
+Changes in  config.h:
+- uncomment  `#define BUTTONS_TYPE BT_CD4021B` and comment other lines with `BUTTONS_TYPE`
+- if you're using RC trick shown above for omitting PL line, comment line `#define CD4021_PIN_PL`
 
 ## Additional features
 
