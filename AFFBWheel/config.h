@@ -13,6 +13,7 @@
 #define BT_74HC165      0
 #define BT_MCP23017     1
 #define BT_CD4021B      2
+#define BT_PCF857x      3
 //-----------------------------------------------------------------------
 
 //---------------------------Configuration-------------------------------
@@ -40,8 +41,8 @@
 
 //---------------------------I2C----------------------------------------
 //bitbang I2С pins - for MCP23017 and ADS1015
-#define I2C_PIN_SDA   A0  //any free pins
-#define I2C_PIN_SCL   A1
+#define I2C_PIN_SDA   2  //any free pins
+#define I2C_PIN_SCL   7
 
 //---------------------------analog axes---------------------------
 //aux analog axes pins
@@ -126,6 +127,7 @@
 #define BUTTONS_TYPE BT_74HC165       //Use 74HC165 shift registers
 //#define BUTTONS_TYPE BT_MCP23017    //Use MCP23017 I2C port expanders
 //#define BUTTONS_TYPE BT_CD4021B     //Use CD4021B shift registers
+//#define BUTTONS_TYPE BT_PCF857x       //Use PCF857x I2C port expanders
 
 //settings for 74HC165
 #define HC165_PIN_SCK     15
@@ -142,6 +144,16 @@
 //settings for MCP23017
 #define MCP23017_ADDR1  0x20
 #define MCP23017_ADDR2  0x21
+
+//settings for PCF857x
+#define PCF857x_L1_TYPE   PCF8575
+#define PCF857x_L1_ADDR1  0x20
+#define PCF857x_L1_ADDR2  0x21
+
+#define PCF857x_L2_TYPE   PCF8574
+#define PCF857x_L2_ADDR1  0x22
+#define PCF857x_L2_ADDR2  0x23
+
 
 //analog pin buttons
 //#define APB

@@ -24,6 +24,9 @@
 #define AS5600_RCONF  0x07
 #define AS5600_CONFIG  0b0001101100000000 //no low power mode, hysteresis off, output digital PWM, PWM 115hz, slow filter 2x(11), fast filter 9LSB(011), watchdog off.
 
+#define PCF8574 1
+#define PCF8575 2
+#define PCF857x_DEFAULT_ADDR  0x20
 
 //bitbang I2C communication.
 //hardware i2c does not allow to reach max available speed, so bitbang is used
@@ -35,8 +38,8 @@ class BB_I2C
 
     void setAddr(uint8_t addr);
     
-    void writeByte(uint8_t data);
-    void readByte(uint8_t* pData, bool ack=true);
+    virtual void writeByte(uint8_t data);
+    virtual void readByte(uint8_t* pData, bool ack=true);
 
     void writeRegister(uint8_t reg, uint8_t data);
     void writeRegister16(uint8_t reg, uint16_t data);
@@ -48,6 +51,13 @@ class BB_I2C
 
     int8_t read();
     int16_t read16();
+};
+
+class BB_I2C_S1: public BB_I2C
+{
+  public:
+    void writeByte(uint8_t data);
+    void readByte(uint8_t* pData, bool ack=true);  
 };
 
 class MCP23017_BBI2C: public BB_I2C
@@ -68,4 +78,10 @@ class AS5600_BBI2C: public BB_I2C
   public:
     void begin(uint8_t addr=AS5600_ADDR);
     int16_t readAngle();
+};
+
+class PCF857x_BBI2C: public BB_I2C_S1
+{
+  public:
+    void begin(uint8_t addr=PCF857x_DEFAULT_ADDR);
 };

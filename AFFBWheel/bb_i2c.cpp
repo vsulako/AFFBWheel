@@ -10,6 +10,9 @@
 #define I2C_START {I2C_SDA_LOW;__builtin_avr_delay_cycles(4);I2C_SCL_LOW;}
 #define I2C_STOP  {I2C_SCL_HIGH;I2C_SDA_HIGH;}
 
+#define I2C_PRERESTART  {I2C_SDA_HIGH;I2C_SCL_HIGH;__builtin_avr_delay_cycles(4);}
+#define I2C_RESTART  {I2C_PRERESTART;I2C_START}
+
 void BB_I2C::setAddr(uint8_t addr)
 {
   addrW=(addr<<1);
@@ -19,7 +22,7 @@ void BB_I2C::setAddr(uint8_t addr)
 void BB_I2C::writeByte(uint8_t data)
 {
   uint8_t b;
-
+     
   b=0b10000000;
   do
   {
@@ -36,13 +39,16 @@ void BB_I2C::writeByte(uint8_t data)
     I2C_SCL_LOW;
   }while(b>>=1);
 
-  __builtin_avr_delay_cycles(1);
+   __builtin_avr_delay_cycles(1);
 
+   
   //ACK
   I2C_SCL_HIGH;
   __builtin_avr_delay_cycles(4);
   I2C_SCL_LOW;
   I2C_SDA_LOW;
+
+  //return b;
 }
 
 void BB_I2C::readByte(uint8_t* pData, bool ack)
@@ -57,10 +63,12 @@ void BB_I2C::readByte(uint8_t* pData, bool ack)
     do
     {
       I2C_SCL_HIGH;
-      __builtin_avr_delay_cycles(1);
       if (I2C_IS_SDA_HIGH)
         *pData |= b;
       I2C_SCL_LOW;
+      
+      __builtin_avr_delay_cycles(1);
+      
     }while(b>>=1);
 
   if (ack)
@@ -134,6 +142,80 @@ int16_t BB_I2C::read16()
     return data;
 }
 
+
+void BB_I2C_S1::writeByte(uint8_t data)
+{
+  //10 - 10 для pcf857x.
+   uint8_t b;
+
+
+  b=0b10000000;
+  do
+  {
+    if (data & b)
+    {
+      I2C_SDA_HIGH;
+    }
+    else
+    {
+      I2C_SDA_LOW;
+    }
+    I2C_SCL_HIGH;
+    __builtin_avr_delay_cycles(10);
+    I2C_SCL_LOW;
+  }while(b>>=1);
+
+  I2C_SDA_HIGH;
+  //__builtin_avr_delay_cycles(1);
+
+  //ACK
+  I2C_SCL_HIGH;
+  __builtin_avr_delay_cycles(8);
+  //b=I2C_IS_SDA_HIGH;
+  
+  I2C_SCL_LOW;
+  I2C_SDA_LOW;
+
+  //return b;
+  
+}
+
+void BB_I2C_S1::readByte(uint8_t* pData, bool ack)
+{
+    //4 и 6 для pcf857x. 44-48 для 5 и 30 для 4
+    uint8_t b;
+
+    *pData=0;
+
+    I2C_SDA_HIGH;
+
+    b=0b10000000;
+    do
+    {
+      I2C_SCL_HIGH;
+      __builtin_avr_delay_cycles(6);
+      if (I2C_IS_SDA_HIGH)
+        *pData |= b;
+      I2C_SCL_LOW;
+    }while(b>>=1);
+
+  if (ack)
+  {
+    I2C_SDA_LOW;   //ACK
+    I2C_SCL_HIGH;
+    __builtin_avr_delay_cycles(8);
+    I2C_SCL_LOW;
+  }
+  else
+  {
+    I2C_SCL_HIGH;  //NACK
+    I2C_SCL_LOW;
+    I2C_SDA_LOW;
+  }
+}
+
+
+
 void MCP23017_BBI2C::begin(uint8_t addr)
 {
     setAddr(addr);
@@ -148,6 +230,7 @@ void MCP23017_BBI2C::begin(uint8_t addr)
     writeRegister16(MCP23017_RGPPUA, 0xFFFF);
         
     //request read
+    delayMicroseconds(10);
     requestReadRegister(MCP23017_RGPIOA);
 }
 
@@ -186,4 +269,15 @@ int16_t AS5600_BBI2C::readAngle()
     int16_t val=read16();
     requestReadRegister(AS5600_RRAWANGLE);
     return val;
+}
+
+void PCF857x_BBI2C::begin(uint8_t addr)
+{
+    setAddr(addr);
+    
+    I2C_START;
+    writeByte(addrW);
+    writeByte(0xFF);
+    writeByte(0xFF);
+    I2C_STOP;
 }

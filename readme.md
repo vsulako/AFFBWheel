@@ -464,6 +464,7 @@ Changes in config.h:
 	```
 In case of using another I2C devices (AS5600,AD1015) - connect in parallel to same pins.
 
+
 #### Option #3: Shift registers CD4021B
 
 CD4014B seems to be compatible (not tested in hardware, because I don't have any).
@@ -479,6 +480,83 @@ Getting rid of PL line for 4-wire connections is also possible:
 Changes in  config.h:
 - uncomment  `#define BUTTONS_TYPE BT_CD4021B` and comment other lines with `BUTTONS_TYPE`
 - if you're using RC trick shown above for omitting PL line, comment line `#define CD4021_PIN_PL`
+
+#### Option #4: I2C expanders PCF8574 or PCF8575
+
+Wiring diagrams:  
+![](images/buttons_PCF8574.png)
+![](images/buttons_PCF8575.png)
+![](images/buttons_PCF857x_mixed.png)
+
+It is possible to mix 1 x PCF8575 and 2 x PCF8574's (example: 16 buttons for wheel, 8 buttons for wheelbase/buttonbox, 8 buttons for H-shifter).
+
+Each board must have unique i2c address.
+
+![](images/pcf857x_addr.jpg)
+
+On PCF8574 boards address is set by switches,jumpers or pins A0-A2.  
+Boards with switches has reverse switch order: switch 1 controls A2, switch 3 controls A0.  
+On PCF8575 boards address is set by solder jumpers A0-A2. Jumper consists of 3 solder pads, middle one must be connected either to GND (right on pictire), or to VCC (left).
+
+On "square" PCF8575 boards (red on picture) there are no I2c pullup resistors.  
+If there are no other I2c devices connected, resisors 1-10kOhm must be installed: from SCL to VCC and from SDA to VCC (shown on connection diagram). R1/R2 pads can be used for this, but this requires SMD resistors 0603.
+
+For some reason "long" PCF8575 boards (blue on picture) worked incorrectly in my case (had no pullips in input mode, required external pullups for buttons, may be defect), so cannot recommend them.
+
+Address reference: (0 - GND, 1 - VCC)
+
+Address|A2|A1|A0
+---  |:---:|:---:|:---:
+0x20 |0|0|0
+0x21 |0|0|1
+0x22 |0|1|0
+0x23 |0|1|1
+0x24 |1|0|0
+0x25 |1|0|1
+0x26 |1|1|0
+0x27 |1|1|1
+
+
+
+Changes in  config.h:
+- uncomment  `#define BUTTONS_TYPE BT_PCF857x` and comment other lines with `BUTTONS_TYPE`
+- set I2C pins (any free pins can be used):
+	```cpp
+	#define I2C_PIN_SDA A0
+	#define I2C_PIN_SCL A1
+	```
+- set i2c adresses:
+	
+	2 x PCF8575: 
+	```cpp
+	#define PCF857x_L1_TYPE   PCF8575   //chip type for buttons 1-16
+	#define PCF857x_L1_ADDR1  0x20      //i2c address
+	
+	#define PCF857x_L2_TYPE   PCF8575   //chip type for buttons 17-32
+	#define PCF857x_L2_ADDR1  0x21      //i2c address
+	```
+	4 x PCF8574: 
+	```cpp
+	#define PCF857x_L1_TYPE   PCF8574
+	#define PCF857x_L1_ADDR1  0x20
+	#define PCF857x_L1_ADDR1  0x21
+	
+	#define PCF857x_L2_TYPE   PCF8574
+	#define PCF857x_L2_ADDR1  0x22
+	#define PCF857x_L2_ADDR1  0x23
+	```
+	1 x PCF8575 + 2 x PCF8574: 
+	```cpp
+	#define PCF857x_L1_TYPE   PCF8575
+	#define PCF857x_L1_ADDR1  0x20
+	
+	#define PCF857x_L2_TYPE   PCF8574
+	#define PCF857x_L2_ADDR1  0x21
+	#define PCF857x_L2_ADDR1  0x22
+	```
+	
+In case of using another I2C devices (AS5600,ADS1015...) - connect in parallel to same pins.
+
 
 ## Additional features
 

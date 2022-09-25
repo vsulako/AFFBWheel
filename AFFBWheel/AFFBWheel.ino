@@ -90,6 +90,12 @@ uint8_t debounceCount=0;
   MCP23017_BBI2C mcp23017_2;
 #endif
 
+#if BUTTONS_TYPE == BT_PCF857x
+  #include "bb_i2c.h"
+
+  PCF857x_BBI2C pcf857x[4];
+#endif
+
 
 void load(bool defaults=false);
 
@@ -218,6 +224,26 @@ void setup() {
     mcp23017_2.begin(MCP23017_ADDR2);
   #endif
 
+
+  #if BUTTONS_TYPE == BT_PCF857x
+
+    #if PCF857x_L1_TYPE==PCF8574
+      pcf857x[0].begin(PCF857x_L1_ADDR1);
+      pcf857x[1].begin(PCF857x_L1_ADDR2);
+    #endif
+    #if PCF857x_L1_TYPE==PCF8575
+      pcf857x[0].begin(PCF857x_L1_ADDR1);
+    #endif
+
+    #if PCF857x_L2_TYPE==PCF8574
+      pcf857x[2].begin(PCF857x_L2_ADDR1);
+      pcf857x[3].begin(PCF857x_L2_ADDR2);
+    #endif
+    #if PCF857x_L2_TYPE==PCF8575
+      pcf857x[2].begin(PCF857x_L2_ADDR1);
+    #endif
+  #endif
+  
   //motor setup
   motor.begin();
   
@@ -818,6 +844,28 @@ void readButtons()
 #if BUTTONS_TYPE == BT_MCP23017
   mcp23017_1.read16((uint16_t *)d);
   mcp23017_2.read16((uint16_t *)(d+2));
+  *((uint32_t *)d)=~*((uint32_t *)d);
+#endif
+
+#if BUTTONS_TYPE == BT_PCF857x
+  //read 1-16
+  #if PCF857x_L1_TYPE==PCF8574
+    pcf857x[0].read(d);
+    pcf857x[1].read(d+1);
+  #endif
+  #if PCF857x_L1_TYPE==PCF8575
+    pcf857x[0].read16((uint16_t *)d);
+  #endif
+
+  //read 17-32
+  #if PCF857x_L2_TYPE==PCF8574
+    pcf857x[2].read(d+2);
+    pcf857x[3].read(d+3);
+  #endif
+  #if PCF857x_L2_TYPE==PCF8575
+    pcf857x[2].read16((uint16_t *)d+1);
+  #endif
+
   *((uint32_t *)d)=~*((uint32_t *)d);
 #endif
 
