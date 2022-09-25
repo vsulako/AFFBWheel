@@ -588,6 +588,39 @@ In case of using another I2C devices (AS5600,ADS1015...) - connect in parallel t
 
 ## Additional features
 
+### Wheel sensor with mechanical transmission
+
+Steering wheel position sensor can be placed aside of wheel axis and connected to it through mechanical transmission (gears, belt...).  
+If transmission ratio is not 1:1, the correction coefficient must be applied.  
+It is possible with these parameters in config.h:
+
+```cpp
+#define STEER_TM_RATIO_ENABLED  //Uncomment to enable feature
+#define STEER_TM_RATIO_MUL      //Multiplication factor
+#define STEER_TM_RATIO_DIV      //Division factor
+```
+
+Sensor readings are multiplied by `STEER_TM_RATIO_MUL` and divided by `STEER_TM_RATIO_DIV`.
+
+Example: wheel and sensor axes are connected with belt transmission, wheel pulley diameter - 200 units, sensor pulley diameter - 20 units, with one turn of wheel sensor's axis makes 10 turns, correction coefficient is 20:200, or 1:10, and configuration is:
+
+```cpp
+#define STEER_TM_RATIO_ENABLED
+#define STEER_TM_RATIO_MUL 1
+#define STEER_TM_RATIO_DIV 10
+```
+
+If rotation direction is changed in transmission (geared transmission, or magnetic sensor is placed on another end of axis) - one of numbers can be specified as negative:
+
+```cpp
+#define STEER_TM_RATIO_ENABLED
+#define STEER_TM_RATIO_MUL 1
+#define STEER_TM_RATIO_DIV -10
+```
+
+Numbers can be fractional.
+
+
 ### Buttons on analog pin
 
 There is possibility to use multiple buttons, connected to single analog arduino pin.

@@ -9,7 +9,7 @@ AxisWheel::AxisWheel()
 
 void AxisWheel::setValue(int32_t rawValue_)
 {
-  #if (defined(STEER_TM_RATIO_FLOAT) || (STEER_TM_RATIO_MUL!=STEER_TM_RATIO_DIV))
+  #ifdef STEER_TM_RATIO_ENABLED
      rawValue=rawValue_ * ((float)STEER_TM_RATIO_MUL / (float)STEER_TM_RATIO_DIV);
   #else
      rawValue= rawValue_;

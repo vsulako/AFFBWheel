@@ -40,6 +40,11 @@
 //default wheel range in degrees.
 #define WHEEL_RANGE_DEFAULT 900
 
+//transmission ratio (see readme)
+//#define STEER_TM_RATIO_ENABLED       //Uncomment to enable feature
+#define STEER_TM_RATIO_MUL       1   //Multiplication factor
+#define STEER_TM_RATIO_DIV       1   //Division factor
+
 //---------------------------I2C----------------------------------------
 //bitbang I2С pins - for MCP23017 and ADS1015
 #define I2C_PIN_SDA   2  //any free pins
