@@ -9,6 +9,7 @@
 #define PT_MCP3204_4W   2
 #define PT_MCP3204_SPI  3
 #define PT_ADS1015      4
+#define PT_ADS7828      5
 
 #define BT_74HC165      0
 #define BT_MCP23017     1
@@ -44,6 +45,7 @@
 #define I2C_PIN_SDA   2  //any free pins
 #define I2C_PIN_SCL   7
 
+#define I2C_DELAY 1
 //---------------------------analog axes---------------------------
 //aux analog axes pins
 //If aux axis is not needed, comment out corresponding line.
@@ -59,6 +61,7 @@
 //#define PEDALS_TYPE PT_MCP3204_4W         //use external ADC MCP3204 (4-wire)
 //#define PEDALS_TYPE PT_MCP3204_SPI        //use external ADC MCP3204 (6-wire SPI)
 //#define PEDALS_TYPE PT_ADS1015            //use external ADC ADS1015
+//#define PEDALS_TYPE PT_ADS7828            //use external ADC ADS7828
 
 //settings for internal ADC
 //analog axes pins
@@ -193,6 +196,5 @@
 #define DEFAULT_MAX_VELOCITY        500
 #define DEFAULT_MAX_ACCELERATION    500
 
- 
 #define DEFAULT_ENDSTOP_OFFSET         0        //force level endstop effect will start from (0-16383). Increasing will make endstop harder.
 #define DEFAULT_ENDSTOP_WIDTH          1024     //length of excess position where endstop effect will rise to maximum level. Decreasing makes endstop harder.

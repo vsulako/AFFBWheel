@@ -28,6 +28,8 @@
 #define PCF8575 2
 #define PCF857x_DEFAULT_ADDR  0x20
 
+#define ADS7828_DEFAULT_ADDR   0x48
+
 //bitbang I2C communication.
 //hardware i2c does not allow to reach max available speed, so bitbang is used
 class BB_I2C
@@ -84,4 +86,11 @@ class PCF857x_BBI2C: public BB_I2C_S1
 {
   public:
     void begin(uint8_t addr=PCF857x_DEFAULT_ADDR);
+};
+
+class ADS7828_BBI2C: public BB_I2C
+{
+  public:
+    void begin(uint8_t addr=ADS7828_DEFAULT_ADDR);
+    int16_t readADC(uint8_t channel);
 };

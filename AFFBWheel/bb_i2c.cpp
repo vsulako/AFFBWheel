@@ -1,14 +1,16 @@
 #include "bb_i2c.h"
 
-#define I2C_SDA_LOW   {pinModeFast(I2C_PIN_SDA, OUTPUT);__builtin_avr_delay_cycles(1);}
-#define I2C_SDA_HIGH  {pinModeFast(I2C_PIN_SDA, INPUT);__builtin_avr_delay_cycles(1);}
-#define I2C_SCL_LOW   {pinModeFast(I2C_PIN_SCL, OUTPUT);__builtin_avr_delay_cycles(1);}
-#define I2C_SCL_HIGH  {pinModeFast(I2C_PIN_SCL, INPUT);__builtin_avr_delay_cycles(1);}
+#define I2C_SDA_LOW   {pinModeFast(I2C_PIN_SDA, OUTPUT);__builtin_avr_delay_cycles(I2C_DELAY);}
+#define I2C_SDA_HIGH  {pinModeFast(I2C_PIN_SDA, INPUT);__builtin_avr_delay_cycles(I2C_DELAY);}
+#define I2C_SCL_LOW   {pinModeFast(I2C_PIN_SCL, OUTPUT);__builtin_avr_delay_cycles(I2C_DELAY);}
+#define I2C_SCL_HIGH  {pinModeFast(I2C_PIN_SCL, INPUT);__builtin_avr_delay_cycles(I2C_DELAY);}
 
 #define I2C_IS_SDA_HIGH (digitalReadFast(I2C_PIN_SDA))
 
 #define I2C_START {I2C_SDA_LOW;__builtin_avr_delay_cycles(4);I2C_SCL_LOW;}
 #define I2C_STOP  {I2C_SCL_HIGH;I2C_SDA_HIGH;}
+#define I2C_PRERESTART  {I2C_SDA_HIGH;I2C_SCL_HIGH;__builtin_avr_delay_cycles(4);}
+#define I2C_RESTART  {I2C_PRERESTART;I2C_START}
 
 #define I2C_PRERESTART  {I2C_SDA_HIGH;I2C_SCL_HIGH;__builtin_avr_delay_cycles(4);}
 #define I2C_RESTART  {I2C_PRERESTART;I2C_START}
@@ -280,4 +282,31 @@ void PCF857x_BBI2C::begin(uint8_t addr)
     writeByte(0xFF);
     writeByte(0xFF);
     I2C_STOP;
+}
+
+void ADS7828_BBI2C::begin(uint8_t addr)
+{
+    setAddr(addr);
+}
+
+int16_t ADS7828_BBI2C::readADC(uint8_t channel)
+{
+    uint8_t cmd = 0b10000100 | (channel<<4);  //1 000 01 00 (single-ended, channel, int ref off/ad on)
+    uint16_t data=0;
+    uint16_t* pData=&data;
+
+    I2C_START;
+    
+    writeByte(addrW);
+    writeByte(cmd);
+    
+    I2C_RESTART;
+   
+    writeByte(addrR);
+    
+    readByte(((uint8_t*)pData)+1, true);
+    readByte((uint8_t*)pData, false);
+
+    I2C_STOP;
+    return data;
 }

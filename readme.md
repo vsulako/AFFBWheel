@@ -377,6 +377,12 @@ Changes in config.h:
 - uncomment line `#define PEDALS_TYPE PT_MP_HC164` (and comment other lines with `PEDALS_TYPE`)
 
 #### Option #3: external ADC MCP3204 
+
+It may be worthwhile to use ADC (analog-digital converter) for pedals.
+Pedals require connecting with long cable, which can catch interference(noise).
+Digital signal from ADC, unlike analog one, is insensitive to this.
+Also, external ADC can provide better resolution than 10-bit one in Arduino.
+
 MCP3204 is fast enough 12-bit 4-channel ADC with SPI interface(6 wires). 
 However, communication can be fit into 5 and even 4 wires.
 
@@ -437,6 +443,28 @@ Changes in config.h:
 	#define I2C_PIN_SCL A1
 	```
 In case of using another I2C devices (AS5600,MCP23017) - connect in parallel to same pins.
+
+#### Option #5: external I2C ADC ADS7828
+
+Another I2C ADC. 
+12bit, 8 channel, fast enough, cheap enough, has external voltage reference. Almost perfect, in my opinion.
+TSSOP-16 package is tiny, but with some effort it can be soldered by hand on breakout board.
+
+![ADS7828](images/ads7828.jpg)
+
+Wiring:
+
+![ADS7828](images/pedals_ADS1015_basic.png)
+
+Changes in config.h:
+
+- uncomment `#define PEDALS_TYPE PT_ADS7828` (and comment other lines with `PEDALS_TYPE`)
+- set I2C pins (any free pins can be used):
+	```cpp
+	#define I2C_PIN_SDA A0
+	#define I2C_PIN_SCL A1
+	```
+In case of using another I2C devices (AS5600,MCP23017...) - connect in parallel to same pins.
 
 ### Alternate options for buttons.
 

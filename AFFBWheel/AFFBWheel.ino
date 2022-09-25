@@ -82,6 +82,14 @@ uint8_t debounceCount=0;
   #define DEFAULT_AA_MAX 4095
 #endif
 
+#if PEDALS_TYPE == PT_ADS7828
+  #include "bb_i2c.h"
+  #define DEFAULT_AA_MIN 0
+  #define DEFAULT_AA_MAX 4095
+
+  ADS7828_BBI2C ads7828;
+#endif
+
 //constants and definions for buttons
 
 #if BUTTONS_TYPE == BT_MCP23017
@@ -165,7 +173,6 @@ void load(bool defaults=false);
 #endif
 //-------------------------------------------------------------------------------------
 
-
 void setup() {
 
   Serial.begin(SERIAL_BAUDRATE);
@@ -198,6 +205,10 @@ void setup() {
 
   #if (PEDALS_TYPE == PT_ADS1015)
     ads1015.begin();
+  #endif
+
+  #if PEDALS_TYPE == PT_ADS7828
+    ads7828.begin();
   #endif
 
   //setup buttons
@@ -579,6 +590,12 @@ void readAnalogAxes()
 
 #if (PEDALS_TYPE == PT_ADS1015)
   ADS1015_read();
+#endif
+
+#if PEDALS_TYPE == PT_ADS7828
+  wheel.analogAxes[AXIS_ACC]->setValue(ads7828.readADC(0));
+  wheel.analogAxes[AXIS_BRAKE]->setValue(ads7828.readADC(1));
+  wheel.analogAxes[AXIS_CLUTCH]->setValue(ads7828.readADC(2));
 #endif
 
   //additional axes
