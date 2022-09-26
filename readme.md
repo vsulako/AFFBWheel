@@ -447,7 +447,7 @@ In case of using another I2C devices (AS5600,MCP23017) - connect in parallel to 
 #### Option #5: external I2C ADC ADS7828
 
 Another I2C ADC. 
-12bit, 8 channel, fast enough, cheap enough, has external voltage reference. Almost perfect, in my opinion.
+12bit, 8 channel, fast enough, cheap enough, has external voltage reference.
 TSSOP-16 package is tiny, but with some effort it can be soldered by hand on breakout board.
 
 ![ADS7828](images/ads7828.jpg)
