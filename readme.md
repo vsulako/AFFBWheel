@@ -454,7 +454,7 @@ TSSOP-16 package is tiny, but with some effort it can be soldered by hand on bre
 
 Wiring:
 
-![ADS7828](images/pedals_ADS1015_basic.png)
+![ADS7828](images/pedals_ADS7828.png)
 
 Changes in config.h:
 
