@@ -264,6 +264,7 @@ This is significally faster than output to serial port and allows to see graphs 
 ### Misc:
 
 - Diodes 1n5817 shown on diagrams can be replaced with any other diodes: 1n4148, 1n5819 and so on.
+- If high power motor is used, power source overload situation is possible. To avoid damage, you can use something to limit current through motor, for example - step down DC-DC convertor with current limiting option ((10-20A)): ![](images/dcdc.jpg)
 
 ### Leonardo instead of ProMicro:
 
