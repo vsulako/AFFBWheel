@@ -171,6 +171,51 @@ void load(bool defaults=false);
      AS5600.begin();
   }
 #endif
+
+
+#if STEER_TYPE == ST_MLX90316
+  #include "multiturn.h"
+  
+  MultiTurn MT;
+
+  #define SETUP_WHEEL_SENSOR setupMLX();
+  #define GET_WHEEL_POS (MT.setValue(getWheelPos()))
+  //#define GET_WHEEL_POS (-getWheelPos())
+  #define CENTER_WHEEL MT.zero();
+
+  int16_t getWheelPos(){
+    SPI.begin();
+    int16_t val;
+    
+    SPI.beginTransaction(SPISettings(500000, MSBFIRST, SPI_MODE1));
+
+    digitalWriteFast(MLX90316_PIN_CS, 0);
+    delayMicroseconds(6);
+    
+    SPI.transfer(0xAA);
+    SPI.transfer(0xFF);
+    
+    delayMicroseconds(25);
+
+    ((uint8_t *)&val)[1]=SPI.transfer(0xFF);
+    delayMicroseconds(25);
+    ((uint8_t *)&val)[0]=SPI.transfer(0xFF);
+  
+    digitalWriteFast(MLX90316_PIN_CS, 1);
+    SPI.endTransaction();
+
+    SPI.end();
+
+    return val>>(16-STEER_BITDEPTH);
+  }
+  
+  void setupMLX()
+  {
+      pinMode(MLX90316_PIN_CS, OUTPUT);
+      digitalWriteFast(MLX90316_PIN_CS, 1);
+      delay(16); //let sensor start
+  }
+#endif
 //-------------------------------------------------------------------------------------
 
 void setup() {

@@ -344,6 +344,20 @@ Changes in config.h:
 	```
 In case of using another I2C devices (AD1015,MCP23017) - connect in parallel to same pins.
 
+#### MLX90316
+
+Another magnet rotation sensor. Used similar to TLE5010/AS5600.
+It is used in Thrustmaster T500 wheel controller. 
+(Support is experimental, because I don't have this sensor)
+
+Connection is similar to TLE5010:  
+![](images/MLX90316.png)
+
+Changes in config.h:
+
+- uncomment `#define STEER_TYPE ST_MLX90316`
+- comment other lines with `STEER_TYPE`
+
 ### Alternate options for analog axes (pedals):
 
 #### Option #1: pullups.

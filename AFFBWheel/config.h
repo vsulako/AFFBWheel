@@ -3,6 +3,7 @@
 #define ST_ENCODER  0
 #define ST_TLE5010  1
 #define ST_AS5600   2
+#define ST_MLX90316 3
 
 #define PT_INTERNAL     0
 #define PT_HC164        1
@@ -26,6 +27,7 @@
 #define STEER_TYPE ST_ENCODER
 //#define STEER_TYPE ST_TLE5010
 //#define STEER_TYPE ST_AS5600
+//#define STEER_TYPE ST_MLX90316
 
 //settings for encoder
 #define ENCODER_PIN1  0       //encoder pins must be interrupt pins:[0, 1, 2, 3]
@@ -34,6 +36,9 @@
 
 //settings for TLE5010
 #define TLE5010_PIN_CS 1
+
+//settings for MLX90316
+#define MLX90316_PIN_CS 1
 
 //wheel sensor bitdepth. Not supposed to be changed.
 #define STEER_BITDEPTH 13
