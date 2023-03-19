@@ -1,8 +1,9 @@
 # AFFBWheel (Arduino Force FeedBack Wheel)
 
-[Описание на русском](readme_rus.md)
+[![Russian Federation](https://raw.githubusercontent.com/stevenrskelton/flag-icon/master/png/16/country-4x3/ru.png "Russian Federation") Описание на русском](readme_rus.md)
 
 This is project of Arduino based wheel controller with force feedback.
+To configure the controller parameters, you need to use the graphical interface **[AFFBWheelGUI](https://github.com/vsulako/AFFBWHeelGUI/blob/master/README_RU.md)**
 
 - 8 axes: steering(X), accelerator(Y), brake(Z), clutch(Rx), and 4 additional(Ry, Rz, Slider, Dial - e.g. for thumbstick, handbrake, etc).
 - 32 buttons.
@@ -31,7 +32,7 @@ Project uses USB HID communication code from [VNWheel](https://github.com/hoantv
 1. Download the project from github as *zip*: <br>
 ![](images/firmware-instructions/github_download.png) <br>
 And unzip the archive to any convenient folder.
-2. Download [Arduino IDE](https://www.arduino.cc/en/software).
+2. Download [Arduino IDE](https://www.arduino.cc/en/software). Version **[1.8.19](https://downloads.arduino.cc/arduino-1.8.19-windows.exe)** is recommended, later versions may have errors.
 3. Download additional libraries:
    - [digitalWriteFast](https://github.com/NicksonYap/digitalWriteFast)
    - [avdweb_AnalogReadFast](https://github.com/avandalen/avdweb_AnalogReadFast)
