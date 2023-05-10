@@ -199,6 +199,10 @@
 //----------------------------FFB settings-------------------------------
 //#define MOTOR_ENABLE_PIN      5  //if is set, selected pin will output 1 when FFB is active and 0 otherwise.
 
+//#define MODE_PWMDIR       //uncomment to use PWM+Dir mode. PWM - pin 9, Dir - pin 10
+//#define PWM_INVERT      //uncomment to invert dir (positive force => dir 0, negative force =>dir 1)
+//#define DIR_INVERT      //uncomment to invert PWM (0 force => 100% PWM duty, 100% force => 0% PWM duty)
+
 //default FFB PWM bitdepth
 #define DEFAULT_FFB_BITDEPTH  9   //15.6 KHz
 
