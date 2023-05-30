@@ -199,9 +199,11 @@
 //----------------------------FFB settings-------------------------------
 //#define MOTOR_ENABLE_PIN      5  //if is set, selected pin will output 1 when FFB is active and 0 otherwise.
 
-//#define MODE_PWMDIR       //uncomment to use PWM+Dir mode. PWM - pin 9, Dir - pin 10
-//#define PWM_INVERT      //uncomment to invert dir (positive force => dir 0, negative force =>dir 1)
-//#define DIR_INVERT      //uncomment to invert PWM (0 force => 100% PWM duty, 100% force => 0% PWM duty)
+#define MODE_PWMDIR         //uncomment to use PWM+Dir mode. PWM - pin 9, Dir - pin 10
+//#define PWM_INVERT        //uncomment to invert dir (positive force => dir 0, negative force =>dir 1)
+//#define DIR_INVERT        //uncomment to invert PWM (0 force => 100% PWM duty, 100% force => 0% PWM duty)
+#define USE_MCP4725         //uncomment to output force value also to MCP4725 I2c DAC. 
+#define MCP4725_ADDR  0x60  //i2c address for MCP4725 (default 0x60)
 
 //default FFB PWM bitdepth
 #define DEFAULT_FFB_BITDEPTH  9   //15.6 KHz

@@ -24,6 +24,8 @@
 #define AS5600_RCONF  0x07
 #define AS5600_CONFIG  0b0001101100000000 //no low power mode, hysteresis off, output digital PWM, PWM 115hz, slow filter 2x(11), fast filter 9LSB(011), watchdog off.
 
+#define MCP4725_DEFAULT_ADDR 0x60
+
 #define PCF8574 1
 #define PCF8575 2
 #define PCF857x_DEFAULT_ADDR  0x20
@@ -93,4 +95,12 @@ class ADS7828_BBI2C: public BB_I2C
   public:
     void begin(uint8_t addr=ADS7828_DEFAULT_ADDR);
     int16_t readADC(uint8_t channel);
+};
+
+class MCP4725_BBI2C: public BB_I2C
+{
+  public:
+    uint16_t prevValue=0;
+    void begin(uint8_t addr=MCP4725_DEFAULT_ADDR);
+    void writeDAC(uint16_t value);
 };

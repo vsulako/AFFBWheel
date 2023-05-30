@@ -310,3 +310,23 @@ int16_t ADS7828_BBI2C::readADC(uint8_t channel)
     I2C_STOP;
     return data;
 }
+
+
+void MCP4725_BBI2C::begin(uint8_t addr)
+{
+    setAddr(addr);
+}
+void MCP4725_BBI2C::writeDAC(uint16_t value)
+{
+    if (prevValue==value)
+      return;
+      
+    prevValue=value;
+    value &= 0x0FFF;                    //clear first bits for normal fast mode
+    
+    I2C_START;
+    writeByte(addrW);
+    writeByte(*(((uint8_t*)&value)+1));//MSB byte
+    writeByte((uint8_t)value);         //LSB byte
+    I2C_STOP;
+}

@@ -1,5 +1,12 @@
 #include "motor.h"
 
+#ifdef USE_MCP4725
+
+  #include "bb_i2c.h"
+  MCP4725_BBI2C mcp4725;
+  
+#endif
+
 void Motor::begin()
 {
   #ifdef MODE_PWMDIR
@@ -34,11 +41,21 @@ void Motor::begin()
     pinMode(MOTOR_ENABLE_PIN, OUTPUT);
     digitalWriteFast(MOTOR_ENABLE_PIN, 0);
   #endif
+
+#ifdef USE_MCP4725
+  #ifdef MCP4725_ADDR
+    mcp4725.begin(MCP4725_ADDR);
+  #else
+    mcp4725.begin();
+  #endif
+#endif
 }
 
 //values -16383..16383
 void Motor::setForce(int16_t force)
 {
+  byte buffer[3]; 
+  
   force=constrain(force,-16383,16383);
 
   #ifdef MOTOR_ENABLE_PIN
@@ -62,12 +79,18 @@ void Motor::setForce(int16_t force)
       {
         OCR1A=(1+force)>>bitShift;
         digitalWriteFast(10, DIR_POS);
+        #ifdef USE_MCP4725
+        mcp4725.writeDAC(force>>2);
+        #endif
       }
       else 
       if (force<0)  
       {
         OCR1A=(1-force)>>bitShift;
         digitalWriteFast(10, DIR_NEG);
+        #ifdef USE_MCP4725
+        mcp4725.writeDAC((-force)>>2);
+        #endif
       }
       else
       {
@@ -94,6 +117,7 @@ void Motor::setForce(int16_t force)
       }
       
   #endif
+
   
 }
 
