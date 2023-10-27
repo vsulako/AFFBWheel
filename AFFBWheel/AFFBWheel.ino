@@ -104,8 +104,8 @@ uint8_t debounceCount=0;
   PCF857x_BBI2C pcf857x[4];
 #endif
 
-
 void load(bool defaults=false);
+void autoFindCenter(int force=AFC_FORCE, int period=AFC_PERIOD, int16_t treshold=AFC_TRESHOLD);
 
 //------------------------ steering wheel sensor ----------------------------
 #if STEER_TYPE == ST_TLE5010
@@ -118,6 +118,8 @@ void load(bool defaults=false);
   #define SETUP_WHEEL_SENSOR setupTLE();
   #define GET_WHEEL_POS (-MT.setValue(getWheelPos()))
   #define CENTER_WHEEL MT.zero();
+  #define SET_WHEEL_POSITION(val) MT.setPosition(-val)
+  
 
   inline int16_t getWheelPos(){
     SPI.begin();
@@ -152,7 +154,7 @@ void load(bool defaults=false);
   #define SETUP_WHEEL_SENSOR
   #define GET_WHEEL_POS (((int32_t)encoder.read() << STEER_BITDEPTH) / ENCODER_PPR)
   #define CENTER_WHEEL encoder.write(0);
-
+  #define SET_WHEEL_POSITION(val) encoder.write(val)
 #endif
 
 #if STEER_TYPE == ST_AS5600
@@ -165,6 +167,7 @@ void load(bool defaults=false);
   #define SETUP_WHEEL_SENSOR setupAS5600();
   #define GET_WHEEL_POS (MT.setValue((AS5600.readAngle()-2048)<<(STEER_BITDEPTH-12)))
   #define CENTER_WHEEL MT.zero();
+  #define SET_WHEEL_POSITION(val) MT.setPosition(val)
 
   void setupAS5600()
   {
@@ -180,8 +183,8 @@ void load(bool defaults=false);
 
   #define SETUP_WHEEL_SENSOR setupMLX();
   #define GET_WHEEL_POS (MT.setValue(getWheelPos()))
-  //#define GET_WHEEL_POS (-getWheelPos())
   #define CENTER_WHEEL MT.zero();
+  #define SET_WHEEL_POSITION(val) MT.setPosition(val)
 
   int16_t getWheelPos(){
     SPI.begin();
@@ -307,6 +310,10 @@ void setup() {
   load();
 
   center();
+
+  #ifdef AFC_ON
+     autoFindCenter();
+  #endif
 
   while(true)
     mainLoop();
@@ -1123,6 +1130,8 @@ void processSerial()
       //center
       if (strcmp_P(cmd, PSTR("center"))==0)
           center();
+
+      
           
       if (strcmp_P(cmd, PSTR("load"))==0)
         load();
@@ -1226,7 +1235,7 @@ void processSerial()
        else
            axisInfo=-1;
      }
-     
+
      //limits <axis> <min> <max>
      if (strcmp_P(cmd, PSTR("limit"))==0)
      if ((arg1>=1) && (arg1<=7))
@@ -1339,6 +1348,23 @@ void processSerial()
        Serial.print(F(" width:"));
        Serial.println(settings.endstopWidth);
      }
+
+#ifdef AFC_ON
+      //Auto find center
+      if (strcmp_P(cmd, PSTR("autocenter"))==0)
+      {
+        if ((arg1<0))
+          autoFindCenter();
+        else
+          if (arg2<0)
+            autoFindCenter(arg1);
+          else
+            if (arg3<0)
+              autoFindCenter(arg1, arg2);
+            else
+              autoFindCenter(arg1, arg2, arg3);
+      }
+#endif
 
 #ifdef APB
      if (strcmp_P(cmd, PSTR("apbout"))==0)
@@ -1468,4 +1494,107 @@ void save()
     EEPROM.put(0,settingsE);
     
     Serial.println(F("Settings saved"));
+}
+
+void autoFindCenter(int16_t force, int16_t period, int16_t treshold)
+{
+    uint8_t _state=1;
+
+    int32_t initialPos;
+    int32_t prevPos;
+    int32_t pos;
+    int32_t dist;
+
+    int32_t posMax;
+    int32_t posMin;
+    int32_t range;
+
+    int32_t prevTime;
+    int32_t currTime;
+
+    motor.setForce(force);
+    initialPos=prevPos=GET_WHEEL_POS;
+
+    prevTime=millis();
+    while(_state)
+    {
+        currTime=millis();
+        if ((currTime-prevTime)>period)
+        {
+          pos=GET_WHEEL_POS;
+          dist=pos-prevPos;
+          prevPos=pos;
+
+          //debug output
+          Serial.print("Pos:");
+          Serial.print(pos);
+          Serial.print("\tDist:");
+          Serial.print(dist);
+          Serial.print("\tTime:");
+          Serial.print(currTime - prevTime);
+          
+          Serial.println();
+
+          switch (_state)
+          {
+              case 1:
+                if (pos-initialPos>100) //distance must be negative
+                {
+                  motor.setForce(0);
+                  Serial.println("Error: FFB inverted!");
+                  return;
+                }
+                
+                if (-dist<treshold)  //Minimum found
+                {
+                  motor.setForce(0);
+                
+                  posMin=pos;   
+                  Serial.print("Min:");
+                  Serial.println(posMin);
+
+                  motor.setForce(-force);
+                  _state=2;
+                }
+                break;
+              case 2:
+                if (dist<treshold)  //Maximum found
+                {
+                  motor.setForce(0);
+
+                  posMax=pos;   
+                  Serial.print("Max:");
+                  Serial.println(posMax);
+                  
+                  //calculate range
+                  range=((posMax-posMin) * 360 / (1<<(STEER_BITDEPTH)))-AFC_RANGE_FIX;
+                  
+                  if (range<2)
+                  {
+                    Serial.println("Error: no movement");
+                    return;
+                  }
+                  
+                  #ifndef AFC_NORANGE
+                  Serial.print("Range:");
+                  Serial.println(range);
+                  wheel.axisWheel->setRange(range);
+                  #endif
+
+                  //Set center by setting new current position
+                  SET_WHEEL_POSITION((posMax - posMin) / 2);
+
+                  //Go to center - should be safe now
+                  motor.setForce(force);
+                  while(GET_WHEEL_POS>0);
+                  motor.setForce(0);
+                 
+                  _state=0;
+                }
+                break;
+          }
+          
+          prevTime=currTime;
+        }
+    }
 }

@@ -27,3 +27,8 @@ void MultiTurn::zero()
   zeroPosition=prevVal;
   turns=0;
 }
+void MultiTurn::setPosition(int32_t value)
+{
+  turns = value / ((int16_t)1<<STEER_BITDEPTH);
+  zeroPosition=prevVal-(value % ((int16_t)1<<STEER_BITDEPTH));
+}

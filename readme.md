@@ -299,6 +299,31 @@ FFB feels like variant #2, but motor is always online, which leads to constant "
 
 Hardware (motors, reductors, etc...) and preferences are different for different people, so try all variants and choose what suits you better.
 
+### Checking rotation directions for wheel sensor and FFB motor.
+
+First, check the wheel sensor, with FFB motor power turned off.
+
+Wheel sensor readings should increase when wheel is turned clockwise. (there is a schematic wheel drawing in GUI, it should rotate just like real wheel)  
+If it rotates in wrong direction, it means that wheel sensor direction is wrong.
+
+- if you use encoder, swap it's A and B wires.
+- with magnetical sensors such a problem can happen if sensor is installed not directly at wheel's axis, but linked to it with transmission, which changes rotation direction. In this case, use correction coefficients in config.h.
+
+FFB can be checked with FEdit application.
+Create a weak constant force effect, and check if it works right.
+
+Detailed description:
+
+- For first start, I would recommend to lower FFB voltage, just in case.
+- Start FEdit.
+- File - Select device - select your device (Arduino Leonardo). A line "Got FF Device" should appear in the log.
+- Create effect: Effect - Insert - Constant Force.
+- new effect ConstantForce1 will appear. Double click it, properties window will appear.
+- Tick on "Infinite" checkbox in Timing tab.
+- In Constant tab, drag a vertical slider to it's center. Red area should become a thin line. It means that you have set near-zero force value. 
+- Press Play. Effect will be active, you can change parameters on the fly. Do not switch away from FEdit's window! When Fedit loses focus, it turns off all effects, so you will need to press Play again when you switch back.
+- Slowly drag slider down, until wheel starts to rotate, then immediately press Stop. Rotation should be clockwise. If wheel rotates counterclockwise, you need to invert FFB direction: either swap motor polarity (M+ M- contacts on BTS7960), or swap L_PWM/R_PWM wires. Then check again.
+
 ### Alternate options for steering axis:
 
 #### TLE5010:
@@ -715,3 +740,47 @@ Configuration in config.h:
 #define HAT_BTN_RIGHT  23
 #define HAT_CLR_BTNS   	    //if this line is commented, selected buttons will continue to register presses along with hat switch
 ```
+
+### Auto find range and center.
+
+If your wheel has mechanical range limiters (mostly it is for factory-built wheels), you can enable automatic finding wheel range and center.
+
+It works like this: 
+Wheel will move counter-clockwise until it reaches one limiter, then it turns back clockwise until reaching another limiter.  
+When limiters will stop it's movement, corresponding limits will be determined, new values of range and center position calculated, and then wheel will return to center.
+
+Do not enable it on if you do not have limiters: wheel will rotate endlessly in search of limiter.
+
+For enabling, uncomment line `#define AFC_ON` in config.h
+
+Also, set up settings:
+```
+#define AFC_FORCE   0    //Force [0...16383] to exert when finding center. 0 by default to prevent accidents.
+#define AFC_PERIOD 50    //Position check period in milliseconds
+#define AFC_TRESHOLD 10  //Minimum position change to detect movement (1 turn - 8192 units)
+#define AFC_NORANGE      //Uncomment to disable range setting
+#define AFC_RANGE_FIX 1  //range will be decreased by this value (in degrees)
+```
+
+More detail: 
+If axis moves less than AFC_TRESHOLD in AFC_PERIOD time - it means it has reached limiter.  
+After finding both limits, wheel range in degrees will be calculated and then decreased by AFC_RANGE_FIX value.  
+This is needed for software limit to act before reaching real limiters, and prevent wheel from kicking into them too hard.  
+AFC_NORANGE - disables range setting, only center position will be set.  
+Also, if range found is too low (less than 2 degrees - apparently, wheel is not moving, either FFB is not working correctly, or force is not enough to move) - procedure will be aborted.  
+
+Wheels, motors, reductors differ, so parameters should be be tuned individually.  
+For convenience, if AFC_ON is enable, a new command will be available for Serial Monitor:  `autocenter <force> <period> <treshold>`  
+It allows to test auto find center procedure with different settings without reflashing.  
+If parameter is not set, the value from config.h will be used.  
+
+First, make sure that wheel axis and FFB directions are set correctly.  
+Then, in config.h enable only AFC_ON, leave AFC_FORCE at 0.  
+If AFC_FORCE will be too high, and your motor/reductor is powerful - it can break either limiter or itself, so start from low force values, e.g. 3000: `autocenter 3000`.  
+If wheel is not moving - try 4000, and so on, until it moves.  
+It can happen that wheel will reach first limiter and stop, thinking that second one is also found.  
+In that case you can increase force further, or play with other two parameters.  
+In process, Serial monitor will output current position and distance traveled during period.  
+After finding appropriate values, put them to config.h to be used by default.  
+
+
