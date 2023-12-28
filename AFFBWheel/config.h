@@ -16,6 +16,7 @@
 #define BT_MCP23017     1
 #define BT_CD4021B      2
 #define BT_PCF857x      3
+#define BT_NONE         0xFF
 //-----------------------------------------------------------------------
 
 //---------------------------Configuration-------------------------------
@@ -140,7 +141,9 @@
 #define BUTTONS_TYPE BT_74HC165       //Use 74HC165 shift registers
 //#define BUTTONS_TYPE BT_MCP23017    //Use MCP23017 I2C port expanders
 //#define BUTTONS_TYPE BT_CD4021B     //Use CD4021B shift registers
-//#define BUTTONS_TYPE BT_PCF857x       //Use PCF857x I2C port expanders
+//#define BUTTONS_TYPE BT_PCF857x     //Use PCF857x I2C port expanders
+//#define BUTTONS_TYPE BT_NONE          //No buttons
+
 
 //settings for 74HC165
 #define HC165_PIN_SCK     15
@@ -176,6 +179,18 @@
 #define APB_TOLERANCE  10
 #define APB_BTNS       25,26
 
+//buttons directly connected to pins 
+//#define DPB        //Enable
+#define DPB_PINS       3,4
+#define DPB_1ST_BTN    1
+
+//button matrix
+//#define BM            //enable
+#define BM_COL_PINS   2,3,4
+#define BM_ROW_PINS   5,6,7
+#define BM_1ST_BTN    1
+
+
 //analog H-shifter
 //#define ASHIFTER
 #define ASHIFTER_PINX     A4
@@ -210,7 +225,7 @@
 #define DEFAULT_ENDSTOP_WIDTH          1024     //length of excess position where endstop effect will rise to maximum level. Decreasing makes endstop harder.
 
 //Auto find center
-#define AFC_ON                                //Uncomment to enable autofind center at start. Requires presence of mechanical limiters (see description)
+//#define AFC_ON                                //Uncomment to enable autofind center at start. Requires presence of mechanical limiters (see description)
 #define AFC_FORCE     9000                      //Force [0...16383] to exert when finding center. 
 #define AFC_PERIOD    50                        //Position check period in milliseconds
 #define AFC_TRESHOLD  10                        //Minimum position change to detect movement

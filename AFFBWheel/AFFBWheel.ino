@@ -26,7 +26,7 @@ SOFTWARE.
 #include <EEPROM.h>
 #include <digitalWriteFast.h>         //https://github.com/NicksonYap/digitalWriteFast
 #include <avdweb_AnalogReadFast.h>    //https://github.com/avandalen/avdweb_AnalogReadFast
-
+#include "fastio.h"
 #include "config.h"
 #include "wheel.h"
 #include "motor.h"
@@ -43,6 +43,15 @@ int16_t force;
 
 bool timing=false;
 bool fvaOut=false;
+
+#ifdef DPB
+static const uint8_t dpb[]={DPB_PINS};
+#endif
+
+#ifdef BM
+static const uint8_t bm_cols[]={BM_COL_PINS};
+static const uint8_t bm_rows[]={BM_ROW_PINS};
+#endif
 
 #ifdef APB
 bool apb_out=false;
@@ -301,6 +310,18 @@ void setup() {
     #if PCF857x_L2_TYPE==PCF8575
       pcf857x[2].begin(PCF857x_L2_ADDR1);
     #endif
+  #endif
+
+  //direct pin buttons
+  #ifdef DPB
+    for(uint8_t i=0;i<sizeof(dpb);i++)
+      pinMode(dpb[i], INPUT_PULLUP);
+  #endif
+
+  //button matrix
+  #ifdef BM
+  for(uint8_t i=0;i<sizeof(bm_cols);i++)
+    pinMode(bm_cols[i], INPUT_PULLUP);
   #endif
   
   //motor setup
@@ -952,6 +973,30 @@ void readButtons()
   
   for(i=0;i<APB_BTN_COUNT;i++)
       bitWrite(*((uint32_t *)d), apb_btns[i]-1, ((apb_val>apb_values[i]-APB_TOLERANCE) && (apb_val<apb_values[i]+APB_TOLERANCE)));
+#endif
+
+//direct pin buttons
+#ifdef DPB
+  for(i=0;i<sizeof(dpb);i++)
+    bitWrite(*((uint32_t *)d), DPB_1ST_BTN-1+i, (*portInputRegister(digitalPinToPort(dpb[i])) & digitalPinToBitMask(dpb[i]))==0 );
+#endif
+
+//button matrix
+#ifdef BM
+  uint8_t btn=BM_1ST_BTN-1;
+  for(i=0;i<sizeof(bm_rows);i++)
+  {
+    //pinMode(bm_rows[i], OUTPUT);
+    //digitalWrite(bm_rows[i], 0);
+    *portModeRegister(digitalPinToPort(bm_rows[i]))|=digitalPinToBitMask(bm_rows[i]);
+    for(uint8_t j=0;j<sizeof(bm_cols);j++)
+    {
+      bitWrite(*((uint32_t *)d), btn, (*portInputRegister(digitalPinToPort(bm_cols[j])) & digitalPinToBitMask(bm_cols[j]))==0);
+      btn++;
+    }
+    //pinMode(bm_rows[i], INPUT);
+    *portModeRegister(digitalPinToPort(bm_rows[i]))&=~digitalPinToBitMask(bm_rows[i]);
+  }
 #endif
 
 
