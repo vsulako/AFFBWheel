@@ -26,7 +26,7 @@ SOFTWARE.
 #include <EEPROM.h>
 #include <digitalWriteFast.h>         //https://github.com/NicksonYap/digitalWriteFast
 #include <avdweb_AnalogReadFast.h>    //https://github.com/avandalen/avdweb_AnalogReadFast
-#include "fastio.h"
+
 #include "config.h"
 #include "wheel.h"
 #include "motor.h"
@@ -1631,9 +1631,13 @@ void autoFindCenter(int16_t force, int16_t period, int16_t treshold)
 
                   //Go to center - should be safe now
                   motor.setForce(force);
-                  while(GET_WHEEL_POS>0);
+                  _state=3;
+                }
+                break;
+              case 3:  
+                if (pos<0)
+                {
                   motor.setForce(0);
-                 
                   _state=0;
                 }
                 break;
