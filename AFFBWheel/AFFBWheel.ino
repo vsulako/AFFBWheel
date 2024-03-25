@@ -163,7 +163,7 @@ void autoFindCenter(int force=AFC_FORCE, int period=AFC_PERIOD, int16_t treshold
   #define SETUP_WHEEL_SENSOR
   #define GET_WHEEL_POS (((int32_t)encoder.read() << STEER_BITDEPTH) / ENCODER_PPR)
   #define CENTER_WHEEL encoder.write(0);
-  #define SET_WHEEL_POSITION(val) encoder.write(val)
+  #define SET_WHEEL_POSITION(val) encoder.write((val * ENCODER_PPR) / (1<<STEER_BITDEPTH))
 #endif
 
 #if STEER_TYPE == ST_AS5600
