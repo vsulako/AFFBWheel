@@ -231,3 +231,4 @@
 #define AFC_TRESHOLD  10                        //Minimum position change to detect movement
 //#define AFC_NORANGE                           //Uncomment to disable range setting
 #define AFC_RANGE_FIX 1                         //range will be decreased by this value (in degrees), to prevent wheel kicking on limiters.
+#define AFC_BUTTON    0                         //Button # to start (1-32, 0 if not needed)

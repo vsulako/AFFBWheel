@@ -1029,6 +1029,14 @@ void readButtons()
       bitClear(wheel.buttons, settings.centerButton);
   }
 
+  //AFC_BUTTON
+  #if defined(AFC_ON) && defined(AFC_BUTTON) && (AFC_BUTTON>0)
+    if (bitRead(*((uint32_t *)d), AFC_BUTTON-1))
+      autoFindCenter();
+    bitClear(wheel.buttons, settings.centerButton)
+  #endif
+
+  
 //analog shifter
 #ifdef ASHIFTER
   uint8_t x=analogReadFast(ASHIFTER_PINX)>>2;
